@@ -1,10 +1,10 @@
-package fr.vmarchaud.croixrouge.services;
+package fr.vmarchaud.shareeat.services;
 
 import java.util.List;
 import java.util.UUID;
 
-import fr.vmarchaud.croixrouge.objects.User;
-import fr.vmarchaud.croixrouge.utils.Utils;
+import fr.vmarchaud.shareeat.objects.User;
+import fr.vmarchaud.shareeat.utils.Utils;
 import lombok.Getter;
 
 public class UserService {

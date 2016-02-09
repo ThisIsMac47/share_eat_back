@@ -1,4 +1,4 @@
-package fr.vmarchaud.croixrouge.utils;
+package fr.vmarchaud.shareeat.utils;
  
 import java.io.IOException;
 import java.io.InputStream;

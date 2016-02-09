@@ -1,4 +1,4 @@
-package fr.vmarchaud.croixrouge.http;
+package fr.vmarchaud.shareeat.http;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +13,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
-import fr.vmarchaud.croixrouge.Core;
+import fr.vmarchaud.shareeat.Core;
+
 
 public class HttpDefaultClient {
 

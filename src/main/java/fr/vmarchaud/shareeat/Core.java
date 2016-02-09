@@ -1,4 +1,4 @@
-package fr.vmarchaud.croixrouge;
+package fr.vmarchaud.shareeat;
 
 import java.io.IOException;
 import java.net.URI;
@@ -12,19 +12,13 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+
+import fr.vmarchaud.shareeat.services.AuthService;
+import fr.vmarchaud.shareeat.services.UserService;
+import fr.vmarchaud.shareeat.utils.Configuration;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import fr.vmarchaud.croixrouge.dbs.IDatabase;
-import fr.vmarchaud.croixrouge.dbs.impls.DBRethink;
-import fr.vmarchaud.croixrouge.objects.User;
-import fr.vmarchaud.croixrouge.services.AuthService;
-import fr.vmarchaud.croixrouge.services.UserService;
-import fr.vmarchaud.croixrouge.utils.Configuration;
-
-import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
-import com.google.android.gcm.server.Sender;
 
 import lombok.Getter;
 
@@ -48,13 +42,10 @@ public class Core {
 	public Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 	
 	// Service & db
-	@Getter public IDatabase		database;
 	@Getter public UserService	userService;
 	@Getter	public AuthService	authService;
 	
 	// Config 
-	public String GAPI_KEY = "google api key";
-	public String PROJECT_ID = "google project id";
 
 	public Core(String[] args) throws JsonSyntaxException, IOException {
 		instance = this;
@@ -62,12 +53,8 @@ public class Core {
 		// Load Config
 		long start = System.currentTimeMillis();
 		
-		JsonObject config = gson.fromJson(new String(Files.readAllBytes(Paths.get("./config.json")), StandardCharsets.UTF_8), JsonObject.class);
-		GAPI_KEY = config.get("GAPIKEY").getAsString();
-		PROJECT_ID = config.get("PROJECT_ID").getAsString();
+		JsonObject config = gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), JsonObject.class);
 		
-		
-		database = new DBRethink("team-kh.eu", 28015);
 		
 		// Load Data
 		
@@ -90,10 +77,8 @@ public class Core {
 		logger.info("Data loaded in " + (System.currentTimeMillis() - start) + " ms");
 		
 		// Starting service
-		userService = new UserService();
 		
 		// Start web server
-		
 		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.get("BASE_URL").getAsString()), new Configuration());
 		
 		System.in.read();
@@ -190,21 +175,4 @@ public class Core {
 		});
 		*/
 	
-	
-	/* Send a push notification to an user */
-	public void send_push(User user, String type, String message) {
-		try {
-			Sender sender = new Sender(GAPI_KEY);
-			Result result = sender.send(new Message.Builder()
-					.collapseKey("message")
-					.timeToLive(120)
-	                .delayWhileIdle(true)
-					.addData("message", message)
-					.addData("type", type)
-					.build(), user.getRegisterId(), 3);
-			System.out.println("Request avaibility on " + user.getName() + " >> messageId = " + result.getMessageId() + " && errorCode = " + result.getErrorCodeName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 }

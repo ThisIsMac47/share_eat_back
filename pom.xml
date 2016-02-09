@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>fr.vmarchaud</groupId>
-	<artifactId>necmergitur</artifactId>
+	<artifactId>shareeat</artifactId>
 	<version>0.0.1</version>
 	
 	<properties>
@@ -15,13 +15,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 	
-	
-	<repositories>
-		<repository>
-		    <id>gcm-server-repository</id>
-		    <url>https://raw.githubusercontent.com/slorber/gcm-server-repository/master/releases/</url>
-		</repository>
-	</repositories>
 	
 
 	<dependencies>
@@ -38,15 +31,9 @@
 			<version>2.5</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.rethinkdb</groupId>
-		    <artifactId>rethinkdb-driver</artifactId>
-		    <version>2.2-beta-1</version>
-		</dependency>
-        <!-- GoogleMessage API -->
-		<dependency>
-		    <groupId>com.google.android.gcm</groupId>
-		    <artifactId>gcm-server</artifactId>
-		    <version>1.0.2</version>
+		   <groupId>org.hibernate</groupId>
+		   <artifactId>hibernate-core</artifactId>
+		   <version>5.0.7.Final</version>
 		</dependency>
         <!-- Logging -->
 		<dependency>

@@ -1,7 +1,4 @@
-package fr.vmarchaud.croixrouge.routes;
-
-import java.math.BigInteger;
-import java.security.SecureRandom;
+package fr.vmarchaud.shareeat.routes;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -11,11 +8,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import fr.vmarchaud.croixrouge.Core;
-import fr.vmarchaud.croixrouge.objects.User;
-import fr.vmarchaud.croixrouge.request.UserLoginRequest;
-import fr.vmarchaud.croixrouge.response.UserLoginResponse;
-import fr.vmarchaud.croixrouge.services.UserService;
+import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.objects.User;
+import fr.vmarchaud.shareeat.request.UserLoginRequest;
+import fr.vmarchaud.shareeat.response.UserLoginResponse;
+import fr.vmarchaud.shareeat.services.AuthService;
+import fr.vmarchaud.shareeat.services.UserService;
 
 @Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
@@ -23,7 +21,7 @@ import fr.vmarchaud.croixrouge.services.UserService;
 public class AuthRoute {
 
 	private UserService	service = Core.getInstance().getUserService();
-	private SecureRandom random = new SecureRandom();
+	private AuthService	auth	= Core.getInstance().getAuthService();
 	
 	
 	@Path("/login")
@@ -33,10 +31,8 @@ public class AuthRoute {
 			return Response.status(Status.BAD_REQUEST).build();
 		User user = service.byName(request.getUsername());
 		if (user != null) {
-			if (user.getPassword().equals(request.getPassword())) {
-				String accessToken = new BigInteger(130, random).toString(32);
-				user.setAccessToken(accessToken);
-				return Response.ok(new UserLoginResponse(accessToken, user.getStatus(), System.currentTimeMillis())).build();
+			if (auth.verify(user, request.getAccessToken())) {
+				return Response.ok(new UserLoginResponse()).build();
 			}
 			else
 				return Response.status(Status.FORBIDDEN).build();

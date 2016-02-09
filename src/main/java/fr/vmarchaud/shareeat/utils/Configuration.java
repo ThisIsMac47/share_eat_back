@@ -1,4 +1,4 @@
-package fr.vmarchaud.croixrouge.utils;
+package fr.vmarchaud.shareeat.utils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

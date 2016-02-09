@@ -1,4 +1,4 @@
-package fr.vmarchaud.croixrouge.utils;
+package fr.vmarchaud.shareeat.utils;
 
 public class Utils {
 	
