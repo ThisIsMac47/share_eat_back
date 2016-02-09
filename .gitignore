@@ -1,0 +1,21 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+#ignore hidden shit
+.*
+
+# ignore config with secret key
+config.json
+
+# ignore useless folder
+target/
+build/
+logs/
+target/
