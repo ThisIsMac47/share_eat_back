@@ -9,6 +9,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.services.UserService;
@@ -20,6 +23,7 @@ import fr.vmarchaud.shareeat.services.UserService;
 public class UserRoute {
 	
 	private UserService	service = Core.getInstance().getUserService();
+	private final Logger logger = LogManager.getLogger();
 	
 	@Path("find/all")
 	@GET

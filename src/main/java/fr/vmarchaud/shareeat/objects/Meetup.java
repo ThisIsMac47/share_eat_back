@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.objects;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public class Meetup {
 	public UUID 		id;
 	public List<UUID>	users;
-	public Location		location;
 	public boolean		finished;
 	public List<String>	tags;
+	public Date			date;
 }

@@ -5,6 +5,8 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.concurrent.TimeoutException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -13,10 +15,10 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
+import fr.vmarchaud.shareeat.enums.EnumEnv;
 import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -28,7 +30,7 @@ public class Core {
 	public static void main(String[] args) {
 		try {
 			new Core(args);
-		} catch (JsonSyntaxException | IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -46,133 +48,33 @@ public class Core {
 	@Getter	public AuthService	authService;
 	
 	// Config 
+	@Getter public EnumEnv env = EnumEnv.DEV;
 
 	public Core(String[] args) throws JsonSyntaxException, IOException {
+		long start = System.currentTimeMillis();
 		instance = this;
 		
 		// Load Config
-		long start = System.currentTimeMillis();
-		
 		JsonObject config = gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), JsonObject.class);
 		
-		
-		// Load Data
-		
-		/*JsonObject data = gson.fromJson(new String(Files.readAllBytes(Paths.get("./data.json")), StandardCharsets.UTF_8), JsonObject.class);
-		TypeToken<List<User>> usersType = new TypeToken<List<User>>(){};
-		List<User> users = gson.fromJson(data.get("users").getAsJsonArray(), usersType.getType());
-		TypeToken<List<Degree>> degreeType = new TypeToken<List<Degree>>(){};
-		List<Degree> degrees = gson.fromJson(data.get("degrees").getAsJsonArray(), degreeType.getType());
-		
-		for(Degree degree : degrees) {
-			for(User user : users) {
-				if (user.getId().compareTo(degree.getId()) == 0) {
-					if (user.getDegrees() == null)
-						user.setDegrees(new ArrayList<Degree>());
-					user.getDegrees().add(degree);
-					break ;
-				}
-			}
-		}*/
-		logger.info("Data loaded in " + (System.currentTimeMillis() - start) + " ms");
-		
 		// Starting service
+		try {
+			dataService = new DataService("shareeat.vmarchaud.fr", 28015);
+		} catch (TimeoutException e) {
+			logger.error("Cant connect to database", e);
+			return ;
+		}
+		userService = new UserService();
+		authService =  new AuthService();
+		
 		
 		// Start web server
 		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.get("BASE_URL").getAsString()), new Configuration());
 		
+		logger.info("Server ready (in " + (System.currentTimeMillis() - start) + " ms)");
+		
 		System.in.read();
 		httpServer.shutdown();
 	}
-		/*
-		
-		post("/available/update", (request, response) -> {
-			if (request.queryMap().get("id").value() == null || request.queryMap().get("location").value() == null ||
-					request.queryMap().get("state").value() == null)
-				return gson.toJson(new ReturnMessage(false, "Fill all required field please"));
-			for (User user : users) {
-				if (user.getId().toString().equalsIgnoreCase(request.queryMap().get("id").value())) {
-					String[] position = request.queryMap().get("location").value().split(",");
-					user.setLast_geo(new Location(Double.valueOf(position[0]), Double.valueOf(position[1])));
-					user.setAvailable(AvailableState.values()[Integer.parseInt(request.queryMap().get("state").value())]);
-					return gson.toJson(new ReturnMessage(true, "Your status has been updated"));
-				}
-			}
-			return gson.toJson(new ReturnMessage(false, "User not found"));
-		});
-		
-		
-		get("/available/request/all", (request, response) -> {
-			for (User user : users) {
-				if (user.getAvailable() != null && user.getAvailable().ordinal() != 0 && !user.getRegisterId().isEmpty()) {
-					send_push(user, "request", "Etes-vous disponible pour être engagé sur une mission ?");
-				}
-			}
-			return gson.toJson(new ReturnMessage(true, "Availability Requested"));
-		});
-		
-		get("/available/request/:id", (request, response) -> {
-			if (request.params(":id") == null)
-				return gson.toJson(new ReturnMessage(false, "Fill all required field please"));
-			for (User user : users) {
-				if (user.getId().toString().equalsIgnoreCase(request.params(":id"))) {
-					if (user.getAvailable().ordinal() == 0 && !user.getRegisterId().isEmpty()) {
-						return gson.toJson(new ReturnMessage(false, "User is not available"));
-					}
-					send_push(user, "request", "Etes-vous disponible pour être engagé sur une mission ?");
-					
-					return gson.toJson(new ReturnMessage(true, "Availability Requested"));
-				}
-			}
-			return gson.toJson(new ReturnMessage(false, "User not found"));
-		});
-		
-		get("/engaged/show/all", (request, response) -> {
-			JsonArray array = new JsonArray();
-			for (User user : users) {
-				if (user.getStatus() != StatusState.NONE) {
-					JsonElement elem = gson.toJsonTree(user, User.class);
-					array.add(elem);
-				}
-			}
-			return array;
-		});
-		
-		get("/engaged/show/:filtre", (request, response) -> {
-			if (request.params(":filtre") == null || StatusState.valueOf(request.params(":filtre")) == null)
-				return gson.toJson(new ReturnMessage(false, "Fill all required field please"));
-			JsonArray array = new JsonArray();
-			for (User user : users) {
-				if (user.getStatus() == StatusState.valueOf(request.params(":filtre"))) {
-					array.add(gson.toJson(user));
-				}
-			}
-			return array;
-		});
-		
-		post("/available/response", (request, response) -> {
-			if (request.queryMap("id").value() == null || request.queryMap("status").value() == null)
-				return gson.toJson(new ReturnMessage(false, "Fill all required field please"));
-			for (User user : users) {
-				if (user.getId().toString().equalsIgnoreCase(request.queryMap("id").value())) {
-					if (request.queryMap("status").booleanValue()) {
-						user.setAvailable(AvailableState.NO_AVAILABLE);
-						if (request.queryMap().get("has_stuff").booleanValue())
-							user.setStatus(StatusState.WAITING_ORDER_STUFF);
-						else
-							user.setStatus(StatusState.WAITING_ORDER);
-						String[] position = request.queryMap().get("location").value().split(",");
-						user.setLast_geo(new Location(Double.valueOf(position[0]), Double.valueOf(position[1])));
-						return gson.toJson(new ReturnMessage(true, "Now, just WAITING for order."));
-					} else {
-						user.setAvailable(AvailableState.NO_AVAILABLE);
-						return gson.toJson(new ReturnMessage(true, "You are not consired anymore as available."));
-					}
-					
-				}
-			}
-			return gson.toJson(new ReturnMessage(false, "User not found"));
-		});
-		*/
 	
 }

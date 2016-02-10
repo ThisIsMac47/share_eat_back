@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.objects;
 
+import java.util.List;
 import java.util.UUID;
 
 import lombok.Data;
@@ -22,5 +23,13 @@ public class User {
 	public String							avatar;
 	public String							background;
 	public String							desc;
+	public List<String>						tags;
+	public String							job;
+	
+	
+	public enum USR_KEY {
+		NAME,
+		ID;
+	}
 }
 

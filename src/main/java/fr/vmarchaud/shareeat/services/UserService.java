@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,16 +10,15 @@ import lombok.Getter;
 
 public class UserService {
 		
-	@Getter private	List<User>		users;
+	@Getter private	List<User>		users = new ArrayList<User>();
 	
 	public UserService(List<User> users) {
-		this.users = users;
+		this.users.addAll(users);
 	}
-	
 	
 	public User		byName(String name) {
 		for(User user : users) {
-			if (user.getName().equals(name))
+			if (user.name != null && user.getName().equals(name))
 				return user;
 		}
 		return null;
