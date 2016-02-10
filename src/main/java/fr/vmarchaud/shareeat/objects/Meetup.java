@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 @Data @RequiredArgsConstructor 
 public class Meetup {
 	public UUID 		id;
+	public UUID			master;
 	public List<UUID>	users;
 	public boolean		finished;
 	public List<String>	tags;

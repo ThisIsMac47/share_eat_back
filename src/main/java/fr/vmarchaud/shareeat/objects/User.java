@@ -27,9 +27,5 @@ public class User {
 	public String							job;
 	
 	
-	public enum USR_KEY {
-		NAME,
-		ID;
-	}
 }
 

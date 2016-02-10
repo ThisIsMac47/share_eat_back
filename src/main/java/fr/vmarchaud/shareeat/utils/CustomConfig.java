@@ -1,11 +1,11 @@
 package fr.vmarchaud.shareeat.utils;
 
 import fr.vmarchaud.shareeat.enums.EnumEnv;
-import lombok.Data;
 
 public class CustomConfig {
-	public static EnumEnv	ENV;
-	public static String 	BASE_URL;
-	public static String	HOSTNAME;
-	public static int		PORT;
+	public EnumEnv	ENV 		=	EnumEnv.DEV;
+	public String 	BASE_URL	=	"http://localhost:4242";
+	public String	HOSTNAME	=	"shareeat.vmarchaud.fr";
+	public String	USERNAME	=	"root";
+	public String	PASSWORD	=	"root";
 }

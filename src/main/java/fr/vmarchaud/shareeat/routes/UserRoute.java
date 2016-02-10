@@ -28,7 +28,7 @@ public class UserRoute {
 	@Path("find/all")
 	@GET
 	public Response showAll() {
-		return Response.ok(service.getUsers()).build(); 
+		return Response.ok(service.all()).build(); 
 	}
 	
 	@Path("find/{id}")

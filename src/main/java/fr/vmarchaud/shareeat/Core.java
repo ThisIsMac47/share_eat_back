@@ -2,23 +2,18 @@ package fr.vmarchaud.shareeat;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.concurrent.TimeoutException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import fr.vmarchaud.shareeat.enums.EnumEnv;
 import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
+import fr.vmarchaud.shareeat.utils.CustomConfig;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -41,40 +36,34 @@ public class Core {
 	@Getter static HttpServer httpServer;
 
 	// Gson instance
-	public Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
+	public Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	// Service & db
 	@Getter public UserService	userService;
 	@Getter	public AuthService	authService;
 	
 	// Config 
-	@Getter public EnumEnv env = EnumEnv.DEV;
+	@Getter public CustomConfig config;
 
 	public Core(String[] args) throws JsonSyntaxException, IOException {
-		long start = System.currentTimeMillis();
 		instance = this;
+		long start = System.currentTimeMillis();
 		
 		// Load Config
-		JsonObject config = gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), JsonObject.class);
+		config = new CustomConfig();//gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), CustomConfig.class);
 		
 		// Starting service
-		try {
-			dataService = new DataService("shareeat.vmarchaud.fr", 28015);
-		} catch (TimeoutException e) {
-			logger.error("Cant connect to database", e);
-			return ;
-		}
+		
 		userService = new UserService();
-		authService =  new AuthService();
+		authService = new AuthService();
 		
 		
 		// Start web server
-		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.get("BASE_URL").getAsString()), new Configuration());
+		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.BASE_URL), new Configuration());
 		
-		logger.info("Server ready (in " + (System.currentTimeMillis() - start) + " ms)");
+		logger.info("Server ready in " + (System.currentTimeMillis() - start) + " ms");
 		
 		System.in.read();
 		httpServer.shutdown();
 	}
-	
 }
