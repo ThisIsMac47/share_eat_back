@@ -23,22 +23,12 @@ public class AuthRoute {
 	private UserService	service = Core.getInstance().getUserService();
 	private AuthService	auth	= Core.getInstance().getAuthService();
 	
-	
 	@Path("/login")
 	@POST
 	public Response userLogin(UserLoginRequest request) {
 		if (!request.isValid())
 			return Response.status(Status.BAD_REQUEST).build();
-		User user = service.byName(request.getUsername());
-		if (user != null) {
-			if (auth.verify(user, request.getAccessToken())) {
-				return Response.ok(new UserLoginResponse()).build();
-			}
-			else
-				return Response.status(Status.FORBIDDEN).build();
-		}
-		else
-			return Response.status(Status.NOT_FOUND).build();
+		return Response.status(Status.NOT_FOUND).build();
 	}
 	
 }
