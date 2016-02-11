@@ -64,6 +64,7 @@ public class Core {
 		logger.info("Server ready in " + (System.currentTimeMillis() - start) + " ms");
 		
 		System.in.read();
+		userService.close();
 		httpServer.shutdown();
 	}
 }
