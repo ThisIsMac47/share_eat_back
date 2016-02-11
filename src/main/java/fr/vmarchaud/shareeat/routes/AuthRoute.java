@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response.Status;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.request.UserLoginRequest;
-import fr.vmarchaud.shareeat.response.UserLoginResponse;
+import fr.vmarchaud.shareeat.response.ProfileShowResponse;
 import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.UserService;
 

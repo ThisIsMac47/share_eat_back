@@ -5,11 +5,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.utils.Utils;
 
 public class UserService extends MasterService {
 	
+	/**
+	 * Try to find an user by his name
+	 * (try to use id instead of name)
+	 * @param String the name that you want to find
+	 * 
+	 * @return User object if found, else null;
+	 */
 	public User		byName(String name) {
 		for(User user : users) {
 			if (user.getName().equals(name)) {
@@ -19,6 +27,12 @@ public class UserService extends MasterService {
 		return null;
 	}
 	
+	/**
+	 * Try to find an user by his ID
+	 * @param id String value of the UUID
+	 * 
+	 * @return User object if found, else null.
+	 */
 	public User		byId(String id) {
 		if (!Utils.isUUID(id)) return null;
 		
@@ -30,10 +44,13 @@ public class UserService extends MasterService {
 		return null;
 	}
 	
-	public List<User> all() {
-		return users;
-	}
-	
+	/**
+	 * Update an user in cache and request update for database
+	 * @param user User object that you want to be updated
+	 * @param datas Map that contains updated key/value 
+	 * 
+	 * @return true if updated, false else.
+	 */
 	public boolean updateUser(User user, Map<String, String> datas) {
 		for(Entry<String, String> entry : datas.entrySet()) {
 			switch (entry.getValue()) {
@@ -81,6 +98,18 @@ public class UserService extends MasterService {
 			e.printStackTrace();
 		}
 		return true;
+	}
+	
+	
+	
+	
+	// alarach
+	public List<User> all() {
+		return users;
+	}
+	
+	public List<Relation> relations() {
+		return relations;
 	}
 	
 }

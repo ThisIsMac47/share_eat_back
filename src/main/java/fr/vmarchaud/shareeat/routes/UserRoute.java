@@ -12,26 +12,28 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.services.UserService;
 
 
-@Path("/users")
+@Path("/debug")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserRoute {
 	
 	private UserService	service = Core.getInstance().getUserService();
 	private final Logger logger = LogManager.getLogger();
+	public static final Gson gson = Core.getInstance().gson;
 	
-	@Path("find/all")
+	@Path("users/all")
 	@GET
 	public Response showAll() {
 		return Response.ok(service.all()).build(); 
 	}
 	
-	@Path("find/{id}")
+	@Path("users/{id}")
 	@GET
 	public Response showUser(@PathParam("id") String id) {
 		User user = service.byId(id);
@@ -44,4 +46,9 @@ public class UserRoute {
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	
+	@Path("relations/all")
+	@GET
+	public Response showRelations() {
+		return Response.ok(service.relations()).build(); 
+	}
 }

@@ -1,7 +1,9 @@
 package fr.vmarchaud.shareeat.services;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +16,7 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
 
 
@@ -26,8 +29,10 @@ public class MasterService {
 	protected ConnectionSource conn = null;
 	protected Logger logger = LogManager.getLogger();
 	
-	protected Dao<User, String> usersDao;
-	protected List<User> 		users;
+	protected Dao<User, String> 	usersDao;
+	protected Dao<Relation, String> relationsDao;
+	protected List<User> 			users;
+	protected List<Relation> 		relations;
 
 	public MasterService() {
 		// If we are starting, load stuff
@@ -55,6 +60,7 @@ public class MasterService {
 			// Register dao
 			try {
 				usersDao = DaoManager.createDao(conn, User.class);
+				relationsDao = DaoManager.createDao(conn, Relation.class);
 			} catch (SQLException e) {
 				logger.error("cannot create DAO", e);
 				System.exit(0);
@@ -63,10 +69,27 @@ public class MasterService {
 			// Query all data
 			try {
 				users = usersDao.queryForAll();
+				relations = relationsDao.queryForAll();
 			} catch (SQLException e) {
 				logger.error("cannot query all users from DAO", e);
 				System.exit(0);
 			}
+			
+			// Link user with their data
+			for (Relation relation : relations) {
+				for (User user : users) {
+					if (user.friends == null) {
+						user.friends = new ArrayList<UUID>();
+					}
+					if (relation.getFriend().compareTo(user.getId()) == 0) {
+						user.friends.add(relation.getUser());
+					}
+					if (relation.getUser().compareTo(user.getId()) == 0) { 
+						user.friends.add(relation.getFriend());
+					}
+				}
+			}
+			
 			logger.info("Data loaded in " + (System.currentTimeMillis() - start) + " ms");
 		}
 	}

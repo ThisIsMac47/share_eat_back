@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.objects;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -42,6 +43,7 @@ public class User {
 	@DatabaseField(columnName = "job")
 	public String							job;
 	
+	public List<UUID>						friends;
 	
 }
 

@@ -18,5 +18,5 @@ public class Meetup {
 	public boolean		finished;
 	public List<String>	tags;
 	public Date			date;
-	public Location		locaion;
+	public Location		location;
 }
