@@ -28,6 +28,8 @@ public class AuthRoute {
 	public Response userLogin(UserLoginRequest request) {
 		if (!request.isValid())
 			return Response.status(Status.BAD_REQUEST).build();
+		//User user = service.b
+		
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	

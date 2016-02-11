@@ -7,11 +7,11 @@ public class AuthService {
 		
 	private UserService	userService = Core.getInstance().getUserService();
 	
-	public boolean verify(String id, String token) {
+	public User verify(String id, String token) {
 		User user = userService.byId(id);
 		if (user != null && user.getAccessToken().equals(token))
-			return true;
+			return user;
 		else
-			return false;
+			return null;
 	}
 }

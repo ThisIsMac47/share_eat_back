@@ -3,9 +3,12 @@ package fr.vmarchaud.shareeat.objects;
 import java.util.List;
 import java.util.UUID;
 
+import javax.management.relation.Role;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import fr.vmarchaud.shareeat.enums.EnumRole;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +45,8 @@ public class User {
 	public String							tags;
 	@DatabaseField(columnName = "job")
 	public String							job;
+	
+	public EnumRole							role;
 	
 	public List<UUID>						friends;
 	
