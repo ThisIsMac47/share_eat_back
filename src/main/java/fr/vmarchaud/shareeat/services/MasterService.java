@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.services;
 
+import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,9 @@ public class MasterService {
 	public static final Gson gson = Core.getInstance().gson;
 
 	// Internal
-	protected ConnectionSource conn = null;
-	protected Logger logger = LogManager.getLogger();
+	protected ConnectionSource 	conn = null;
+	protected Logger 			logger = LogManager.getLogger();
+	protected SecureRandom 		random = new SecureRandom();
 	
 	protected Dao<User, String> 	usersDao;
 	protected Dao<Relation, String> relationsDao;

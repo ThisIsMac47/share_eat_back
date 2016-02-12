@@ -1,15 +1,22 @@
 package fr.vmarchaud.shareeat.services;
 
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.utils.Utils;
 
 public class UserService extends MasterService {
+	
+	private AuthService		authSrv	= Core.getInstance().getAuthService();
 	
 	/**
 	 * Try to find an user by his name
@@ -114,6 +121,31 @@ public class UserService extends MasterService {
 			e.printStackTrace();
 		}
 		return true;
+	}
+	
+	/**
+	 * Create an user / Encrypt password / Gen UUID and try to save it
+	 * 
+	 * @param mail The mail of the user
+	 * @param password Unencrypted password of the user
+	 * @return User object created
+	 */
+	public User createUser(String mail, String password) {
+		User user = new User();
+		user.setId(UUID.randomUUID());
+		user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
+		user.setMail(mail);
+		String accessToken = new BigInteger(130, random).toString(32);
+		authSrv.addLoggedUser(accessToken, user);
+		users.add(user);
+		try {
+			usersDao.create(user);
+		} catch (SQLException e) {
+			logger.error("exception while trying to register an new user", e);
+			return null;
+		}
+		logger.info(user.getId() + " has been successfuly created");
+		return user;
 	}
 	
 	

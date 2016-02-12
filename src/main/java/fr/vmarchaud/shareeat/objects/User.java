@@ -10,9 +10,10 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import fr.vmarchaud.shareeat.enums.EnumRole;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
-@Data @RequiredArgsConstructor @DatabaseTable(tableName = "users")
+@Data @NoArgsConstructor @DatabaseTable(tableName = "users")
 public class User {
 	
 	// Internal info
