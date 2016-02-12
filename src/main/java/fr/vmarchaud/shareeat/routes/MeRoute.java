@@ -27,7 +27,7 @@ public class MeRoute {
 	public Response updateProfile(UserProfileUpdateRequest request) {
 		if (!request.isValid())
 			return Response.status(Status.BAD_REQUEST).build();
-		if (!authSrv.verify(request.getId(), request.getAccessToken())) 
+		if (authSrv.verify(request.getId(), request.getAccessToken()) != null) 
 			return Response.status(Status.FORBIDDEN).build();
 		
 		User user = userSrv.byId(request.getId());

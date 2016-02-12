@@ -56,7 +56,7 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 StringTokenizer tokenizer = new StringTokenizer(decodedString, ":");
                 String id = tokenizer.nextToken();
                 String accessToken = tokenizer.nextToken();
-                if (!Utils.isUUID(id) || accessToken.length() > 0) {
+                if (!Utils.isUUID(id) || accessToken.isEmpty()) {
                 	requestContext.abortWith(ACCESS_DENIED);
                     return;
                 }

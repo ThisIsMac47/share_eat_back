@@ -12,7 +12,6 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.services.UserService;
@@ -21,11 +20,10 @@ import fr.vmarchaud.shareeat.services.UserService;
 @Path("/debug")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class UserRoute {
+public class DebugRoute {
 	
 	private UserService	service = Core.getInstance().getUserService();
 	private final Logger logger = LogManager.getLogger();
-	public static final Gson gson = Core.getInstance().gson;
 	
 	@Path("users/all")
 	@GET

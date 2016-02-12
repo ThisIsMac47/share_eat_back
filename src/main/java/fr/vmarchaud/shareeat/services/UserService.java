@@ -28,6 +28,22 @@ public class UserService extends MasterService {
 	}
 	
 	/**
+	 * Try to find an user by his mail
+	 * (try to use id instead of mail)
+	 * @param String the mail that you want to find
+	 * 
+	 * @return User object if found, else null;
+	 */
+	public User		byMail(String mail) {
+		for(User user : users) {
+			if (user.getMail().equals(mail)) {
+				return user;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Try to find an user by his ID
 	 * @param id String value of the UUID
 	 * 

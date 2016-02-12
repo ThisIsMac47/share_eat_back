@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.routes;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,6 +16,7 @@ import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.UserService;
 
 @Path("/profile")
+@RolesAllowed("USER")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProfileRoute {
@@ -27,7 +29,7 @@ public class ProfileRoute {
 	public Response show(@PathParam("id") String id) {
 		User user = userSrv.byId(id);
 		if (user != null) {
-			//if (user.getFriends())
+			
 		}
 		return Response.status(Status.BAD_REQUEST).build();
 	}

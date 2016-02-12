@@ -48,6 +48,8 @@ public class User {
 	
 	public EnumRole							role;
 	
+	public String							password;
+	
 	public List<UUID>						friends;
 	
 }
