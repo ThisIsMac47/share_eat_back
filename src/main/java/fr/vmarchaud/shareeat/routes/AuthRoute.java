@@ -50,7 +50,6 @@ public class AuthRoute {
 		return Response.status(Status.FORBIDDEN).build();
 	}
 	
-	
 	@Path("/register")
 	@POST
 	public Response userRegister(UserRegisterRequest request) {
