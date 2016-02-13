@@ -15,5 +15,6 @@ public class Configuration extends ResourceConfig {
         //jerseyLogger.setLevel(Level.ALL);
         registerInstances(new LoggingFilter(jerseyLogger, false));
         register(GsonMessageBodyHandler.class);
+        register(AuthenticationFilter.class);
     }
 }

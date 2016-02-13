@@ -32,7 +32,6 @@ public class AuthRoute {
 	private AuthService		authSrv	= Core.getInstance().getAuthService();
 	private SecureRandom 	random = new SecureRandom();
 	
-	
 	@Path("/login")
 	@POST
 	public Response userLogin(UserLoginRequest request) {

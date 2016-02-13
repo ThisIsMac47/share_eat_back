@@ -28,7 +28,7 @@ public enum EnumRole {
 	 * Compare the first role to the second role
 	 * @param EnumRole first
 	 * @param EnumRole second
-	 * @return the difference of weight
+	 * @return the difference of ordinal
 	 */
 	public static int		compareWeight(EnumRole first, EnumRole second) {
 		return first.weight - first.weight;

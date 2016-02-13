@@ -11,6 +11,7 @@ import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
  
 import org.glassfish.jersey.internal.util.Base64;
@@ -44,8 +45,8 @@ public class AuthenticationFilter implements ContainerRequestFilter
             }
             String decodedString = new String(Base64.decode(authorization.get(0).getBytes()));;
   
-            //Verify if an user can access to a method
-            if(method.isAnnotationPresent(RolesAllowed.class) || cls.isAnnotationPresent(PermitAll.class))
+            // If annotation has been set
+            if(method.isAnnotationPresent(RolesAllowed.class) || cls.isAnnotationPresent(RolesAllowed.class))
             {
             	// Get which role are allowed
                 RolesAllowed rolesAnnotation = method.getAnnotation(RolesAllowed.class);
@@ -53,26 +54,38 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 	rolesAnnotation = cls.getAnnotation(RolesAllowed.class);
                 EnumRole roleNeeded = EnumRole.fromName(rolesAnnotation.value()[0]);
                 
+                // Get all token
                 StringTokenizer tokenizer = new StringTokenizer(decodedString, ":");
                 String id = tokenizer.nextToken();
                 String accessToken = tokenizer.nextToken();
+                
+                // Invalid auth token
                 if (!Utils.isUUID(id) || accessToken.isEmpty()) {
                 	requestContext.abortWith(ACCESS_DENIED);
                     return;
                 }
                 
+                // Get user from his token and id
                 User user = Core.getInstance().getAuthService().verify(id, accessToken);
-                if (user == null) {
-                	if (roleNeeded.compareTo(user.getRole()) > 0) {
+                if (user != null) {
+                	// Check if the user have enought right to go here
+                	if (EnumRole.compareWeight(roleNeeded, user.getRole()) > 0) {
                 		requestContext.abortWith(ACCESS_DENIED);
                         return;
                 	}
+                	// User is allowed here so put it in context
+                	requestContext.setProperty("user", user);
                 	return ;
                 }
+                // User not found, get out
                 else {
                 	requestContext.abortWith(ACCESS_DENIED);
                     return;
                 }
+            }
+            // If nothing has been set, better block it for security reason
+            else {
+            	requestContext.abortWith(Response.status(Status.NOT_IMPLEMENTED).build());
             }
         }
     }

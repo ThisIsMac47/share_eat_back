@@ -2,6 +2,7 @@ package fr.vmarchaud.shareeat.services;
 
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,6 +13,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
+import fr.vmarchaud.shareeat.response.ProfileShowResponse;
 import fr.vmarchaud.shareeat.utils.Utils;
 
 public class UserService extends MasterService {
@@ -148,6 +150,22 @@ public class UserService extends MasterService {
 		return user;
 	}
 	
+	
+	public ProfileShowResponse buildProfile(User user, boolean isFriend) {
+		Map<String, String>		datas = new HashMap<String, String>();
+		
+		datas.put("description", user.getDesc());
+		datas.put("avatar", user.getAvatar());
+		datas.put("job", user.getJob());
+		datas.put("background", user.getBackground());
+		datas.put("tags", user.getTags());
+		if (isFriend) {
+			datas.put("age", String.valueOf(user.getAge()));
+			datas.put("mail", user.getMail());
+			datas.put("phone", user.getPhone());
+		}
+		return new ProfileShowResponse(datas);
+	}
 	
 	
 	
