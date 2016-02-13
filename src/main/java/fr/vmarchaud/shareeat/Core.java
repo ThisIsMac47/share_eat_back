@@ -50,7 +50,8 @@ public class Core {
 		long start = System.currentTimeMillis();
 		
 		// Load Config
-		config = new CustomConfig();//gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), CustomConfig.class);
+		config = new CustomConfig();
+		//gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), CustomConfig.class);
 		
 		// Starting service
 		
