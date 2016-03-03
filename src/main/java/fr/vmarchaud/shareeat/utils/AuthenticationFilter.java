@@ -43,7 +43,7 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 requestContext.abortWith(ACCESS_DENIED);
                 return;
             }
-            String decodedString = new String(Base64.decode(authorization.get(0).getBytes()));;
+            String decodedString = new String(authorization.get(0));
   
             // If annotation has been set
             if(method.isAnnotationPresent(RolesAllowed.class) || cls.isAnnotationPresent(RolesAllowed.class))
@@ -56,6 +56,11 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 
                 // Get all token
                 StringTokenizer tokenizer = new StringTokenizer(decodedString, ":");
+                if (tokenizer.countTokens() != 2) {
+                	requestContext.abortWith(ACCESS_DENIED);
+                    return;
+                }
+                
                 String id = tokenizer.nextToken();
                 String accessToken = tokenizer.nextToken();
                 

@@ -99,8 +99,8 @@ public class UserService extends MasterService {
 					user.setDesc(entry.getValue());
 					break ;
 				}
-				case "background" : {
-					user.setBackground(entry.getValue());
+				case "school" : {
+					user.setSchool(entry.getValue());;
 					break ;
 				}
 				case "avatar" : {
@@ -154,15 +154,27 @@ public class UserService extends MasterService {
 	public ProfileShowResponse buildProfile(User user, boolean isFriend) {
 		Map<String, String>		datas = new HashMap<String, String>();
 		
-		datas.put("description", user.getDesc());
-		datas.put("avatar", user.getAvatar());
-		datas.put("job", user.getJob());
-		datas.put("background", user.getBackground());
-		datas.put("tags", user.getTags());
+		if (user.getDesc() != null && user.getDesc().length() > 0)
+			datas.put("description", user.getDesc());
+		
+		if (user.getAvatar() != null && user.getAvatar().length() > 0)
+			datas.put("avatar", user.getAvatar());
+		
+		if (user.getJob() != null && user.getJob().length() > 0)
+			datas.put("job", user.getJob());
+		
+		if (user.getSchool() != null && user.getSchool().length() > 0)
+			datas.put("school", user.getSchool());
+		
+		if (user.getTags() != null && user.getTags().length() > 0)
+			datas.put("tags", user.getTags());
+		
 		if (isFriend) {
 			datas.put("age", String.valueOf(user.getAge()));
 			datas.put("mail", user.getMail());
-			datas.put("phone", user.getPhone());
+
+			if (user.getPhone() != null && user.getPhone().length() > 0)
+				datas.put("phone", user.getPhone());
 		}
 		return new ProfileShowResponse(datas);
 	}

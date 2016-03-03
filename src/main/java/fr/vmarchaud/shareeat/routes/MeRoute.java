@@ -38,11 +38,17 @@ public class MeRoute {
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		User user = (User)context.getProperty("user");
-		
 		if (userSrv.updateUser(user, request.getDatas()))
 			return Response.ok().build();
 		else
 			return Response.status(Status.NOT_MODIFIED).build();
+	}
+	
+	@Path("profile")
+	@GET
+	public Response	getProfile(@Context ContainerRequestContext context) {
+		User user = (User)context.getProperty("user");
+		return Response.ok(userSrv.buildProfile(user, true)).build();
 	}
 	
 	@Path("friends")

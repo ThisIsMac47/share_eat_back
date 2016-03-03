@@ -11,12 +11,10 @@ public class UserLoginRequest {
 	public LoginMethod 	method;
 	
 	public boolean isValid() {
-		if (method == null)
+		if (username == null || username.length() == 0 || password == null || password.length() == 0)
 			return false;
-		if (method == LoginMethod.STANDALONE &&
-				(username == null || username.length() == 0 || password == null || password.length() == 0))
-			return false;
-		return true;
+		else
+			return true;
 	}
 	
 	public enum LoginMethod {

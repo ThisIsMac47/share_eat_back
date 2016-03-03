@@ -34,7 +34,7 @@ public class AuthService extends MasterService{
 		if (!loggedUsers.containsKey(token)) return null;
 		
 		User user = loggedUsers.get(token);
-		if (id.equals(user.getId()))
+		if (id.equalsIgnoreCase(user.getId().toString()))
 			return user;
 		else
 			return null;

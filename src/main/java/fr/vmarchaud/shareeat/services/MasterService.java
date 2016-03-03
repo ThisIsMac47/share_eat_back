@@ -42,7 +42,7 @@ public class MasterService {
 			long start = System.currentTimeMillis();
 			// Loading driver
 			try {
-				Class.forName("org.postgresql.Driver");
+				Class.forName("com.mysql.jdbc.Driver");
 			} catch (ClassNotFoundException e1) {
 				logger.info("Cannot load database driver");
 				System.exit(0);
