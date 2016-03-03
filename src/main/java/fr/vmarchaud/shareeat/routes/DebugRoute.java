@@ -25,7 +25,6 @@ import fr.vmarchaud.shareeat.services.UserService;
 public class DebugRoute {
 	
 	private UserService	service = Core.getInstance().getUserService();
-	private final Logger logger = LogManager.getLogger();
 	
 	@Path("users/all")
 	@GET

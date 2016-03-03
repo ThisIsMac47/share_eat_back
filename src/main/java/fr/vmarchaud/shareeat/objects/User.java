@@ -3,15 +3,12 @@ package fr.vmarchaud.shareeat.objects;
 import java.util.List;
 import java.util.UUID;
 
-import javax.management.relation.Role;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import fr.vmarchaud.shareeat.enums.EnumRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data @NoArgsConstructor @DatabaseTable(tableName = "users")
 public class User {

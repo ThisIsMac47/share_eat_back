@@ -14,8 +14,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.Provider;
  
-import org.glassfish.jersey.internal.util.Base64;
-
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.enums.EnumRole;
 import fr.vmarchaud.shareeat.objects.User;
