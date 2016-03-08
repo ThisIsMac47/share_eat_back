@@ -78,9 +78,13 @@ public class UserService extends MasterService {
 	 */
 	public boolean updateUser(User user, Map<String, String> datas) {
 		for(Entry<String, String> entry : datas.entrySet()) {
-			switch (entry.getValue()) {
+			switch (entry.getKey()) {
 				case "mail" : {
 					user.setMail(entry.getValue());
+					break ;
+				}
+				case "name" : {
+					user.setName(entry.getValue());
 					break ;
 				}
 				case "phone" : {
@@ -112,7 +116,7 @@ public class UserService extends MasterService {
 					break ;
 				}
 				default : {
-					return false;
+					break;
 				}
 			}
 		}
@@ -151,8 +155,11 @@ public class UserService extends MasterService {
 	}
 	
 	
-	public ProfileShowResponse buildProfile(User user, boolean isFriend) {
+	public Map<String, String> buildProfile(User user, boolean isFriend) {
 		Map<String, String>		datas = new HashMap<String, String>();
+		
+		if (user.getName() != null && user.getName().length() > 0)
+			datas.put("name", user.getName());
 		
 		if (user.getDesc() != null && user.getDesc().length() > 0)
 			datas.put("description", user.getDesc());
@@ -176,7 +183,7 @@ public class UserService extends MasterService {
 			if (user.getPhone() != null && user.getPhone().length() > 0)
 				datas.put("phone", user.getPhone());
 		}
-		return new ProfileShowResponse(datas);
+		return datas;
 	}
 	
 	

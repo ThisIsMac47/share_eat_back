@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.routes;
 
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
@@ -33,13 +34,13 @@ public class MeRoute {
 	
 	@Path("update")
 	@POST
-	public Response updateProfile(UserProfileUpdateRequest request, @Context ContainerRequestContext context) {
-		if (!request.isValid())
+	public Response updateProfile(Map<String, String> datas, @Context ContainerRequestContext context) {
+		if (datas == null || datas.size() == 0)
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		User user = (User)context.getProperty("user");
-		if (userSrv.updateUser(user, request.getDatas()))
-			return Response.ok().build();
+		if (userSrv.updateUser(user, datas))
+			return Response.ok("{}").build();
 		else
 			return Response.status(Status.NOT_MODIFIED).build();
 	}
