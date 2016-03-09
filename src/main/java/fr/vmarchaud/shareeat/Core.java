@@ -10,6 +10,7 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import com.google.gson.JsonSyntaxException;
 
 import fr.vmarchaud.shareeat.services.AuthService;
+import fr.vmarchaud.shareeat.services.MasterService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
 import fr.vmarchaud.shareeat.utils.CustomConfig;
@@ -41,6 +42,7 @@ public class Core {
 	// Service & db
 	@Getter public UserService	userService;
 	@Getter	public AuthService	authService;
+	@Getter public MasterService master;
 	
 	// Config 
 	@Getter public CustomConfig config;
@@ -54,7 +56,7 @@ public class Core {
 		//gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), CustomConfig.class);
 		
 		// Starting service
-		
+		master = new MasterService();
 		userService = new UserService();
 		authService = new AuthService();
 		

@@ -44,10 +44,4 @@ public class DebugRoute {
 			return Response.ok(user).build();
 		return Response.status(Status.NOT_FOUND).build();
 	}
-	
-	@Path("relations/all")
-	@GET
-	public Response showRelations() {
-		return Response.ok(service.relations()).build(); 
-	}
 }

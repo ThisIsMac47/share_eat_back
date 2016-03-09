@@ -19,6 +19,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.request.UserProfileUpdateRequest;
 import fr.vmarchaud.shareeat.services.UserService;
@@ -52,6 +53,14 @@ public class MeRoute {
 		return Response.ok(userSrv.buildProfile(user, true)).build();
 	}
 	
+	@Path("tags")
+	@GET
+	public Response	getTags(@Context ContainerRequestContext context) {
+		return Response.ok(Core.getInstance().getMaster().getTags()).build();
+	}
+	
+	// TO-DO
+	/*
 	@Path("friends")
 	@GET
 	public Response	getFriends(@Context ContainerRequestContext context) {
@@ -69,7 +78,7 @@ public class MeRoute {
 		User friend = userSrv.byId(id);
 		if (friend == null)
 			return Response.status(Status.NOT_FOUND).build();
-		user.getFriends().add(friend.getId());
+		user.getFriends().add(new Relation(user, friend));
 		return Response.ok().build();
 	}
 	
@@ -85,5 +94,5 @@ public class MeRoute {
 			return Response.status(Status.NOT_FOUND).build();
 		user.getFriends().remove(friend);
 		return Response.ok().build();
-	}
+	}*/
 }

@@ -5,20 +5,21 @@
 	<groupId>fr.vmarchaud</groupId>
 	<artifactId>shareeat</artifactId>
 	<version>0.0.1</version>
-	
+
 	<properties>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <targetJdk>1.8</targetJdk>
-        <java.version>1.8</java.version>
-        <jersey.version>2.22.1</jersey.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-	
-	
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<targetJdk>1.8</targetJdk>
+		<java.version>1.8</java.version>
+		<jersey.version>2.22.1</jersey.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mainClass>fr.vmarchaud.shareeat.Core</mainClass>
+	</properties>
+
+
 
 	<dependencies>
-        <!-- Utils dependency -->
+		<!-- Utils dependency -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -30,7 +31,7 @@
 			<artifactId>gson</artifactId>
 			<version>2.5</version>
 		</dependency>
-        <!-- Logging -->
+		<!-- Logging -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -41,21 +42,21 @@
 			<artifactId>log4j-jul</artifactId>
 			<version>2.5</version>
 		</dependency>
-        <!-- Http API -->
-		  <dependency>
-                <groupId>org.glassfish.jersey</groupId>
-                <artifactId>jersey-bom</artifactId>
-                <version>${jersey.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+		<!-- Http API -->
+		<dependency>
+			<groupId>org.glassfish.jersey</groupId>
+			<artifactId>jersey-bom</artifactId>
+			<version>${jersey.version}</version>
+			<type>pom</type>
+			<scope>import</scope>
+		</dependency>
 		<!-- Http Server -->
-		 <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-grizzly2-http</artifactId>
-            <version>${jersey.version}</version>
-        </dependency>
-        <!-- DB Driver -->
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-grizzly2-http</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+		<!-- DB Driver -->
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-jdbc</artifactId>
@@ -77,61 +78,48 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.3m</version>
 		</dependency>
-		
+
 	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<finalName>shareeat_backend</finalName>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>fr.vmarchaud.shareeat.Core</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 				<executions>
 					<execution>
-						<id>pack-full-jar</id>
 						<phase>package</phase>
 						<goals>
 							<goal>single</goal>
 						</goals>
-						<configuration>
-							<finalName>app</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-							<archive>
-								<manifest>
-								</manifest>
-							</archive>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <inherited>true</inherited>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>java</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <mainClass>fr.Main</mainClass>
-                </configuration>
-            </plugin>
-        </plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<inherited>true</inherited>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<archive>
+						<manifest>
+							<mainClass>fr.vmarchaud.shareeat.Core</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 </project>

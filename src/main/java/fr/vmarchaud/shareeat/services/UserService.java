@@ -13,7 +13,6 @@ import org.mindrot.jbcrypt.BCrypt;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
-import fr.vmarchaud.shareeat.response.ProfileShowResponse;
 import fr.vmarchaud.shareeat.utils.Utils;
 
 public class UserService extends MasterService {
@@ -116,7 +115,7 @@ public class UserService extends MasterService {
 					break ;
 				}
 				default : {
-					break;
+					return false;
 				}
 			}
 		}
@@ -191,10 +190,6 @@ public class UserService extends MasterService {
 	// alarach
 	public List<User> all() {
 		return users;
-	}
-	
-	public List<Relation> relations() {
-		return relations;
 	}
 	
 }

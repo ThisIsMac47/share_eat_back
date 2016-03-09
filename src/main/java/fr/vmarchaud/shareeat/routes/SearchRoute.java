@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
@@ -40,9 +40,9 @@ public class SearchRoute {
 		List<User> users =  userSrv.all().stream().filter(user -> user.tags != null &&
 				Collections.disjoint(Arrays.asList(user.getTags().split(",")), request.getTags()) == false).collect(Collectors.toCollection(ArrayList::new));
 		
-		List<Map<String, String>> response = new ArrayList<Map<String, String>>();
+		List<UUID> response = new ArrayList<UUID>();
 		for(User user : users) 
-			response.add(userSrv.buildProfile(user, false));
+			response.add(user.getId());
 		
 		return Response.ok(response).build();
 	}

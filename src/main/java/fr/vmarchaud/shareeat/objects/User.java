@@ -1,9 +1,11 @@
 package fr.vmarchaud.shareeat.objects;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import fr.vmarchaud.shareeat.enums.EnumRole;
@@ -46,10 +48,10 @@ public class User {
 	
 	public EnumRole							role;
 
-	
-	public List<UUID>						friends;
 
-	//@ForeignCollectionField
-	//public Collection<Meetup>				meetups;
+	@ForeignCollectionField(eager = true)
+	public Collection<Relation>					friends;
+
+	public Collection<Meetup>				meetups;
 }
 

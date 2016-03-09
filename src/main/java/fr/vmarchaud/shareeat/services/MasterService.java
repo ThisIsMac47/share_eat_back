@@ -4,8 +4,6 @@ import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,8 +15,12 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.objects.Location;
+import fr.vmarchaud.shareeat.objects.Mealplan;
 import fr.vmarchaud.shareeat.objects.Relation;
+import fr.vmarchaud.shareeat.objects.Tag;
 import fr.vmarchaud.shareeat.objects.User;
+import lombok.Getter;
 
 
 public class MasterService {
@@ -33,12 +35,20 @@ public class MasterService {
 	
 	protected Dao<User, String> 	usersDao;
 	protected Dao<Relation, String> relationsDao;
-	protected List<User> 			users;
-	protected List<Relation> 		relations;
+	protected Dao<Location, String> locationsDao;
+	protected Dao<Mealplan, String> mealplansDao;
+	protected Dao<Tag, String>	tagsDao;
+	
+	@Getter protected List<User> 			users;
+	@Getter protected List<Location>		locations;
+	@Getter protected List<String>			tags = new ArrayList<String>();
 
+	private boolean started = false;
+	
 	public MasterService() {
 		// If we are starting, load stuff
-		if (conn == null) {
+		if (started == false) {
+			started = true;
 			long start = System.currentTimeMillis();
 			// Loading driver
 			try {
@@ -63,6 +73,9 @@ public class MasterService {
 			try {
 				usersDao = DaoManager.createDao(conn, User.class);
 				relationsDao = DaoManager.createDao(conn, Relation.class);
+				locationsDao = DaoManager.createDao(conn, Location.class);
+				mealplansDao = DaoManager.createDao(conn, Mealplan.class);
+				tagsDao = DaoManager.createDao(conn, Tag.class);
 			} catch (SQLException e) {
 				logger.error("cannot create DAO", e);
 				System.exit(0);
@@ -71,25 +84,15 @@ public class MasterService {
 			// Query all data
 			try {
 				users = usersDao.queryForAll();
-				relations = relationsDao.queryForAll();
+				locations = locationsDao.queryForAll();
+				relationsDao.queryForAll();
+				mealplansDao.queryForAll();
+				tagsDao.queryForAll().forEach(tag -> {
+					tags.add(tag.getValue());
+				});
 			} catch (SQLException e) {
-				logger.error("cannot query all users from DAO", e);
+				logger.error("cannot query all data from DAO", e);
 				System.exit(0);
-			}
-			
-			// Link user with their data
-			for (Relation relation : relations) {
-				for (User user : users) {
-					if (user.friends == null) {
-						user.friends = new ArrayList<UUID>();
-					}
-					if (relation.getFriend().compareTo(user.getId()) == 0) {
-						user.friends.add(relation.getUser());
-					}
-					if (relation.getUser().compareTo(user.getId()) == 0) { 
-						user.friends.add(relation.getFriend());
-					}
-				}
 			}
 			
 			logger.info("Data loaded in " + (System.currentTimeMillis() - start) + " ms");

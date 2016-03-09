@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -23,6 +24,17 @@ import org.glassfish.grizzly.utils.Charsets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
+
+import fr.vmarchaud.shareeat.objects.Relation;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)
@@ -86,8 +98,29 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>, 
         if (gson == null) {
             final GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.serializeNulls();
+			TypeToken<Collection<Relation>> token = new TypeToken<Collection<Relation>>(){};
+            gsonBuilder.registerTypeAdapter(token.getType(), new RelationAdapter());
             gson = gsonBuilder.create();
         }
         return gson;
     }
+    
+    public class RelationAdapter implements JsonDeserializer<Collection<Relation>>, JsonSerializer<Collection<Relation>> {
+
+        @Override
+        public Collection<Relation> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return null;
+        }
+
+        @Override
+        public JsonElement serialize(Collection<Relation> src, Type typeOfSrc, JsonSerializationContext context) {
+        	JsonArray array = new JsonArray();
+        	for(Relation rel : src) {
+        		array.add(rel.getFriend().toString());
+        	}
+            return array;
+        }
+    }
+
+    
 }
