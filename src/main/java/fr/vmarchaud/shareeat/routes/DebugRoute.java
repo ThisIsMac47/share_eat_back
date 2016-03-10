@@ -32,6 +32,12 @@ public class DebugRoute {
 		return Response.ok(service.all()).build(); 
 	}
 	
+	@Path("location/all")
+	@GET
+	public Response showAllLoc() {
+		return Response.ok(service.getLocations()).build(); 
+	}
+	
 	@Path("users/{id}")
 	@GET
 	public Response showUser(@PathParam("id") String id) {

@@ -10,7 +10,9 @@ import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import com.google.gson.JsonSyntaxException;
 
 import fr.vmarchaud.shareeat.services.AuthService;
+import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.MasterService;
+import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
 import fr.vmarchaud.shareeat.utils.CustomConfig;
@@ -43,6 +45,8 @@ public class Core {
 	@Getter public UserService	userService;
 	@Getter	public AuthService	authService;
 	@Getter public MasterService master;
+	@Getter public MeetupService meetupService;
+	@Getter public LocationService locationService;
 	
 	// Config 
 	@Getter public CustomConfig config;
@@ -59,7 +63,8 @@ public class Core {
 		master = new MasterService();
 		userService = new UserService();
 		authService = new AuthService();
-		
+		meetupService = new MeetupService();
+		locationService = new LocationService();
 		
 		// Start web server
 		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.BASE_URL), new Configuration());
