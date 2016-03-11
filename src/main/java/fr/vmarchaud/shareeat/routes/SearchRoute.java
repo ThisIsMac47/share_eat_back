@@ -24,6 +24,7 @@ import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Location;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.request.SearchUserByTagRequest;
+import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
 
@@ -35,6 +36,7 @@ public class SearchRoute {
 
 	private UserService		userSrv = Core.getInstance().getUserService();
 	private MeetupService	meetupSrv = Core.getInstance().getMeetupService();
+	private LocationService	locationSrv = Core.getInstance().getLocationService();
 	
 	@Path("user/tags")
 	@POST
@@ -52,14 +54,20 @@ public class SearchRoute {
 		return Response.ok(response).build();
 	}
 	
-	@Path("location/{type}")
+	@Path("location/{price}/{type}")
 	@GET
-	public Response	searchLocationByType(@PathParam("type") String type, @Context ContainerRequestContext context) {
-		if (type == null || type.length() == 0)
+	public Response	searchLocationByType(@PathParam("type") String type, @PathParam("price") String price, @Context ContainerRequestContext context) {
+		// If price is not set or its not a number, send a bad request code.
+		if (price == null || !price.matches("[0-9]+"))
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		List<Location>	locations = meetupSrv.getLocations().stream().filter(location -> location.getType().toLowerCase().contains(type.toLowerCase())).collect(Collectors.toList());
-		
+		// Check location by price first
+		List<Location>	locations = locationSrv.byPrice(Integer.parseInt(price));
+		// And if we found at least two the location we sort by type
+		if (locations.size() > 1 && type != null && type.length() > 0 && !type.equals("none")) {
+			locations = locations.stream().filter(location -> location.getType().toLowerCase().contains(type.toLowerCase())).collect(Collectors.toList());
+		}
+		// Create our list of location uuid and send the response.
 		List<UUID> response = new ArrayList<UUID>();
 		for(Location loc : locations) 
 			response.add(loc.getId());

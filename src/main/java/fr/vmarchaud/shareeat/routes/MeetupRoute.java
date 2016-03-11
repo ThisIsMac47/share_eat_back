@@ -27,7 +27,7 @@ public class MeetupRoute {
 	private UserService		userSrv = Core.getInstance().getUserService();
 	private MeetupService	meetupSrv = Core.getInstance().getMeetupService();
 	
-	@Path("location/{id}")
+	@Path("create")
 	@GET
 	public Response show(@PathParam("id") String id, @Context ContainerRequestContext context) {
 		if (!Utils.isUUID(id))
