@@ -25,33 +25,39 @@ public class User {
 	@DatabaseField(columnName = "accessToken")
 	public String 							accessToken;
 	
-	
-	// Data used for profile
 	@DatabaseField(columnName = "age")
 	public short							age;
+	
 	@DatabaseField(columnName = "phone")
 	public String							phone;
+	
 	@DatabaseField(columnName = "mail")
 	public String							mail;
+	
 	@DatabaseField(columnName = "avatar")
 	public String							avatar;
+	
 	@DatabaseField(columnName = "school")
 	public String							school;
+	
 	@DatabaseField(columnName = "description")
 	public String							desc;
+	
 	@DatabaseField(columnName = "tags")
 	public String							tags;
+	
 	@DatabaseField(columnName = "job")
 	public String							job;
+	
 	@DatabaseField(columnName = "password")
 	public String							password;
 	
 	public EnumRole							role;
 
-
 	@ForeignCollectionField(eager = true)
 	public Collection<Relation>					friends;
 
-	public Collection<Meetup>				meetups;
+	@ForeignCollectionField(eager = true)
+	public Collection<Meetup>					meetups;
 }
 

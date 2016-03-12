@@ -20,11 +20,20 @@ public class LocationService extends MasterService {
 	
 	/**
 	 * Find a location by his id
-	 * @param name
-	 * @return
+	 * @param String
+	 * @return Location or null if not found
 	 */
 	public Location		byId(String id) {
 		return locations.stream().filter(location -> location.getId().compareTo(UUID.fromString(id)) == 0).findFirst().orElse(null);
+	}
+	
+	/**
+	 * Find a location by his id
+	 * @param UUID
+	 * @return Location or null if not found
+	 */
+	public Location		byId(UUID id) {
+		return locations.stream().filter(location -> location.getId().compareTo(id) == 0).findFirst().orElse(null);
 	}
 	
 	/**

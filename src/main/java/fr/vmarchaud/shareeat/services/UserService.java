@@ -27,12 +27,7 @@ public class UserService extends MasterService {
 	 * @return User object if found, else null;
 	 */
 	public User		byName(String name) {
-		for(User user : users) {
-			if (user.getName().equals(name)) {
-				return user;
-			}
-		}
-		return null;
+		return users.stream().filter(user -> user.getName().equals(name)).findFirst().orElse(null);
 	}
 	
 	/**
@@ -43,12 +38,20 @@ public class UserService extends MasterService {
 	 * @return User object if found, else null;
 	 */
 	public User		byMail(String mail) {
-		for(User user : users) {
-			if (user.getMail().equals(mail)) {
-				return user;
-			}
-		}
-		return null;
+		return users.stream().filter(user -> user.getMail().equals(mail)).findFirst().orElse(null);
+	}
+	
+	/**
+	 * Try to find an user by his ID
+	 * @param id String value of the UUID
+	 * 
+	 * @return User object if found, else null.
+	 * @deprecated
+	 */
+	public User		byId(String id) {
+		if (!Utils.isUUID(id)) return null;
+
+		return users.stream().filter(user -> user.getId().compareTo(UUID.fromString(id)) == 0).findFirst().orElse(null);
 	}
 	
 	/**
@@ -57,15 +60,8 @@ public class UserService extends MasterService {
 	 * 
 	 * @return User object if found, else null.
 	 */
-	public User		byId(String id) {
-		if (!Utils.isUUID(id)) return null;
-		
-		for(User user : users) {
-			if (user.getId().toString().equals(id)) {
-				return user;
-			}
-		}
-		return null;
+	public User		byId(UUID id) {
+		return users.stream().filter(user -> user.getId().compareTo(id) == 0).findFirst().orElse(null);
 	}
 	
 	/**
