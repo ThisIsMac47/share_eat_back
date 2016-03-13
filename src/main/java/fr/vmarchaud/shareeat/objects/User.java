@@ -1,7 +1,6 @@
 package fr.vmarchaud.shareeat.objects;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -51,7 +50,8 @@ public class User {
 	
 	@DatabaseField(columnName = "password")
 	public String							password;
-	
+
+	@DatabaseField(columnName = "role")
 	public EnumRole							role;
 
 	@ForeignCollectionField(eager = true)
@@ -59,5 +59,8 @@ public class User {
 
 	@ForeignCollectionField(eager = true)
 	public Collection<Meetup>					meetups;
+	
+	@ForeignCollectionField(eager = true, foreignFieldName="receiver")
+	public Collection<Invitation>				invitations;
 }
 

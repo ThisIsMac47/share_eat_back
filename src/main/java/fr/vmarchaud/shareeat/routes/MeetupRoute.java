@@ -1,5 +1,9 @@
 package fr.vmarchaud.shareeat.routes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -35,10 +39,27 @@ public class MeetupRoute {
 		if (request == null || !request.isValid())
 			return Response.status(Status.BAD_REQUEST).build();
 		
+		// Get user from the context
 		User user = (User)context.getProperty("user");
+		
+		// Get if the location actually exist in our database
 		Location loc = locationSrv.byId(request.getLocation());
 		if (loc == null)
 			return Response.status(Status.NOT_FOUND).build();
-		return Response.ok(Status.CREATED).build();
+		
+		// Try to parse the string to date
+		Date date;
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(request.getDate());
+		} catch (ParseException e) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		// Ask to create the service and from the result, return created or not.
+		boolean state = meetupSrv.createMeetup(user, loc, request.getTags(), request.getInvited(), date, request.getMealplan());
+		if (state)
+			return Response.ok(Status.CREATED).build();
+		else
+			return Response.ok(Status.INTERNAL_SERVER_ERROR).build();
 	}
 }

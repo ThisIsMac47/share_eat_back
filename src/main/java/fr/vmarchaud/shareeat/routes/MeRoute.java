@@ -56,7 +56,7 @@ public class MeRoute {
 	@Path("tags")
 	@GET
 	public Response	getTags(@Context ContainerRequestContext context) {
-		return Response.ok(Core.getInstance().getMaster().getTags()).build();
+		return Response.ok(Core.getInstance().getDataService().getTags()).build();
 	}
 	
 	// TO-DO

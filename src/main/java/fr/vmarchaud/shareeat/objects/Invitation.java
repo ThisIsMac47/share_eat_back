@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import fr.vmarchaud.shareeat.enums.EnumInvitation;
+import fr.vmarchaud.shareeat.enums.EnumState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class Invitation {
 	public EnumInvitation			type;
 	
 	@DatabaseField(columnName = "meetup", foreign = true)
-	public Meetup					meetup;
+	public transient Meetup			meetup;
 	
 	@DatabaseField(columnName = "state")
-	public boolean					state;
+	public EnumState				state;
 }

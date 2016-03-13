@@ -15,15 +15,17 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 
 import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.objects.Invitation;
 import fr.vmarchaud.shareeat.objects.Location;
 import fr.vmarchaud.shareeat.objects.Mealplan;
+import fr.vmarchaud.shareeat.objects.Meetup;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.Tag;
 import fr.vmarchaud.shareeat.objects.User;
 import lombok.Getter;
 
 
-public class MasterService {
+public class DataService {
 
 	// DB constants
 	public static final Gson gson = Core.getInstance().gson;
@@ -31,25 +33,28 @@ public class MasterService {
 	// Internal
 	protected ConnectionSource 	conn = null;
 	protected Logger 			logger = LogManager.getLogger();
-	protected SecureRandom 		random = new SecureRandom();
 	
 	protected Dao<User, String> 	usersDao;
 	protected Dao<Relation, String> relationsDao;
 	protected Dao<Location, String> locationsDao;
 	protected Dao<Mealplan, String> mealplansDao;
+	protected Dao<Meetup, String> 	meetupsDao;
+	protected Dao<Invitation, String> invitationsDao;
 	protected Dao<Tag, String>	tagsDao;
 	
 	@Getter protected List<User> 			users;
 	@Getter protected List<Location>		locations;
+	@Getter protected List<Meetup>			meetups;
 	@Getter protected List<String>			tags = new ArrayList<String>();
 
 	private boolean started = false;
 	
-	public MasterService() {
+	public DataService() {
 		// If we are starting, load stuff
 		if (started == false) {
 			started = true;
 			long start = System.currentTimeMillis();
+			
 			// Loading driver
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
@@ -76,6 +81,8 @@ public class MasterService {
 				locationsDao = DaoManager.createDao(conn, Location.class);
 				mealplansDao = DaoManager.createDao(conn, Mealplan.class);
 				tagsDao = DaoManager.createDao(conn, Tag.class);
+				meetupsDao = DaoManager.createDao(conn, Meetup.class);
+				invitationsDao = DaoManager.createDao(conn, Invitation.class);
 			} catch (SQLException e) {
 				logger.error("cannot create DAO", e);
 				System.exit(0);
@@ -90,6 +97,8 @@ public class MasterService {
 				tagsDao.queryForAll().forEach(tag -> {
 					tags.add(tag.getValue());
 				});
+				meetups = meetupsDao.queryForAll();
+				invitationsDao.queryForAll();
 			} catch (SQLException e) {
 				logger.error("cannot query all data from DAO", e);
 				System.exit(0);

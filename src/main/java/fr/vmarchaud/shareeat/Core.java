@@ -11,7 +11,7 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.LocationService;
-import fr.vmarchaud.shareeat.services.MasterService;
+import fr.vmarchaud.shareeat.services.DataService;
 import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
@@ -42,9 +42,9 @@ public class Core {
 	public Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	// Service & db
+	@Getter public DataService dataService;
 	@Getter public UserService	userService;
 	@Getter	public AuthService	authService;
-	@Getter public MasterService master;
 	@Getter public MeetupService meetupService;
 	@Getter public LocationService locationService;
 	
@@ -60,7 +60,7 @@ public class Core {
 		//gson.fromJson(new String(Files.readAllBytes(Paths.get("config.json")), StandardCharsets.UTF_8), CustomConfig.class);
 		
 		// Starting service
-		master = new MasterService();
+		dataService = new DataService();
 		userService = new UserService();
 		authService = new AuthService();
 		meetupService = new MeetupService();
@@ -72,7 +72,7 @@ public class Core {
 		logger.info("Server ready in " + (System.currentTimeMillis() - start) + " ms");
 		
 		System.in.read();
-		userService.close();
+		dataService.close();
 		httpServer.shutdown();
 	}
 }

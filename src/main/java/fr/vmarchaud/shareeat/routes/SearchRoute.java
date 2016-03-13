@@ -24,6 +24,7 @@ import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Location;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.request.SearchUserByTagRequest;
+import fr.vmarchaud.shareeat.services.DataService;
 import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
@@ -37,6 +38,7 @@ public class SearchRoute {
 	private UserService		userSrv = Core.getInstance().getUserService();
 	private MeetupService	meetupSrv = Core.getInstance().getMeetupService();
 	private LocationService	locationSrv = Core.getInstance().getLocationService();
+	private DataService		dataSrv = Core.getInstance().getDataService();
 	
 	@Path("user/tags")
 	@POST
@@ -44,7 +46,7 @@ public class SearchRoute {
 		if (request == null || !request.isValid())
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		List<User> users =  userSrv.all().stream().filter(user -> user.tags != null &&
+		List<User> users =  dataSrv.getUsers().stream().filter(user -> user.tags != null &&
 				Collections.disjoint(Arrays.asList(user.getTags().split(",")), request.getTags()) == false).collect(Collectors.toCollection(ArrayList::new));
 		
 		List<UUID> response = new ArrayList<UUID>();

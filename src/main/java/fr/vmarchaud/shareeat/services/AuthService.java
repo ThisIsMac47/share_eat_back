@@ -3,20 +3,25 @@ package fr.vmarchaud.shareeat.services;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.utils.Utils;
 
-public class AuthService extends MasterService{
+public class AuthService {
 		
-	private UserService			userService = Core.getInstance().getUserService();
+	private UserService			userSrv = Core.getInstance().getUserService();
+	private DataService			dataSrv = Core.getInstance().getDataService();
+	private Logger 				logger = LogManager.getLogger();
+	
 	private Map<String, User>	loggedUsers;
 	
 	public AuthService() {
-		super();
 		loggedUsers = new HashMap<String, User>();
-		for(User user : users) {
-			if (!user.getAccessToken().isEmpty()) {
+		for(User user : dataSrv.getUsers()) {
+			if (user.accessToken != null && !user.getAccessToken().isEmpty()) {
 				loggedUsers.put(user.getAccessToken(), user);
 			}
 		}
