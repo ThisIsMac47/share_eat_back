@@ -21,6 +21,9 @@ public class Meetup {
 	
 	@DatabaseField(columnName = "master", foreign = true)
 	public transient User			master;
+
+	@DatabaseField(columnName = "name")
+	public String					name;
 	
 	@DatabaseField(columnName = "done")
 	public boolean					done;

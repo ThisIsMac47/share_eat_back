@@ -26,15 +26,18 @@ public class MeetupService {
 	
 	/**
 	 * Create a meetup from parameters
+	 * 
+	 * @param String : name of the meetup
 	 * @param User : the person that created the meetup
 	 * @param Location : where this meetup will be
 	 * @param String[] : list of tags for this meetup
 	 * @param List<UUID> : the list of all user that has been invited
 	 * @param String : the date (with time) of this meetup
 	 * @param Integer : the price of this meetup (for the food)
+	 * 
 	 * @return true if created and false if there was an error
 	 */
-	public boolean	createMeetup(User user, Location loc, String[] tags, List<UUID> invitedIds, Date date, int price) {
+	public boolean	createMeetup(String name, User user, Location loc, String[] tags, List<UUID> invitedIds, Date date, int price) {
 		Meetup meetup = new Meetup();
 		
 		// Set default information
@@ -45,6 +48,7 @@ public class MeetupService {
 		meetup.setPrice(price);
 		meetup.setDate(date);
 		meetup.setDone(false);
+		meetup.setName(name);
 		
 		// For each id, try to get user from and create invitation for each of them
 		List<Invitation> invitations = new ArrayList<Invitation>();

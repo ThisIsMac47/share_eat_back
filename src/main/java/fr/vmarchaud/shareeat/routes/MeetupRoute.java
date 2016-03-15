@@ -56,7 +56,7 @@ public class MeetupRoute {
 		}
 		
 		// Ask to create the service and from the result, return created or not.
-		boolean state = meetupSrv.createMeetup(user, loc, request.getTags(), request.getInvited(), date, request.getMealplan());
+		boolean state = meetupSrv.createMeetup(request.getName(), user, loc, request.getTags(), request.getInvited(), date, request.getMealplan());
 		if (state)
 			return Response.ok(Status.CREATED).build();
 		else

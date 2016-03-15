@@ -22,6 +22,8 @@ import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.request.UserProfileUpdateRequest;
+import fr.vmarchaud.shareeat.services.LocationService;
+import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Utils;
 
@@ -32,6 +34,8 @@ import fr.vmarchaud.shareeat.utils.Utils;
 public class MeRoute {
 	
 	private UserService	userSrv = Core.getInstance().getUserService();
+	private MeetupService	meetupSrv = Core.getInstance().getMeetupService();
+	private LocationService	locationSrv = Core.getInstance().getLocationService();
 	
 	@Path("update")
 	@POST
@@ -57,6 +61,12 @@ public class MeRoute {
 	@GET
 	public Response	getTags(@Context ContainerRequestContext context) {
 		return Response.ok(Core.getInstance().getDataService().getTags()).build();
+	}
+	
+	@Path("invitations")
+	@GET
+	public Response	getInvitations(@Context ContainerRequestContext context) {
+		return Response.ok(((User)context.getProperty("user")).getInvitations()).build();
 	}
 	
 	// TO-DO

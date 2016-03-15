@@ -30,4 +30,16 @@ public class DebugRoute {
 	public Response showAllLoc() {
 		return Response.ok(service.getLocations()).build(); 
 	}
+	
+	@Path("meetup/all")
+	@GET
+	public Response showAllMeetup() {
+		return Response.ok(service.getMeetups()).build(); 
+	}
+	
+	@Path("invitations/all")
+	@GET
+	public Response showAllInvit() {
+		return Response.ok(service.getLocations()).build(); 
+	}
 }
