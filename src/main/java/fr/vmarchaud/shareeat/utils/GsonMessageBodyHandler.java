@@ -1,7 +1,6 @@
 
 package fr.vmarchaud.shareeat.utils;
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,16 +23,11 @@ import org.glassfish.grizzly.utils.Charsets;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
+import fr.vmarchaud.shareeat.adapters.InvitationAdapter;
+import fr.vmarchaud.shareeat.adapters.RelationCollectionAdapter;
+import fr.vmarchaud.shareeat.objects.Invitation;
 import fr.vmarchaud.shareeat.objects.Relation;
 
 @Provider
@@ -41,10 +35,28 @@ import fr.vmarchaud.shareeat.objects.Relation;
 @Consumes(MediaType.APPLICATION_JSON)
 public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>, MessageBodyReader<Object> {
 
-    private Gson gson;
+    private static Gson gson;
+    
+    public static Gson getGson() {
+        if (gson == null) {
+            final GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.serializeNulls();
+			TypeToken<Collection<Relation>> token = new TypeToken<Collection<Relation>>(){};
+            gsonBuilder.registerTypeAdapter(token.getType(), new RelationCollectionAdapter());
+            gsonBuilder.registerTypeAdapter(Invitation.class, new InvitationAdapter());
+            gson = gsonBuilder.create();
+        }
+        return gson;
+    }
+    
 
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
+        return true;
+    }
+
+    @Override
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return true;
     }
 
@@ -66,10 +78,6 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>, 
         }
     }
 
-    @Override
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return true;
-    }
 
     @Override
     public long getSize(Object object, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
@@ -91,34 +99,6 @@ public final class GsonMessageBodyHandler implements MessageBodyWriter<Object>, 
         	try {
         		writer.close();
 			} catch (IOException e) { }
-        }
-    }
-
-    protected Gson getGson() {
-        if (gson == null) {
-            final GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.serializeNulls();
-			TypeToken<Collection<Relation>> token = new TypeToken<Collection<Relation>>(){};
-            gsonBuilder.registerTypeAdapter(token.getType(), new RelationAdapter());
-            gson = gsonBuilder.create();
-        }
-        return gson;
-    }
-    
-    public class RelationAdapter implements JsonDeserializer<Collection<Relation>>, JsonSerializer<Collection<Relation>> {
-
-        @Override
-        public Collection<Relation> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-            return null;
-        }
-
-        @Override
-        public JsonElement serialize(Collection<Relation> src, Type typeOfSrc, JsonSerializationContext context) {
-        	JsonArray array = new JsonArray();
-        	for(Relation rel : src) {
-        		array.add(rel.getFriend().toString());
-        	}
-            return array;
         }
     }
 

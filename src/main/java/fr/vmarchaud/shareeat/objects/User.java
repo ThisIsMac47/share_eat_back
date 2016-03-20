@@ -60,7 +60,7 @@ public class User {
 	@ForeignCollectionField(eager = true)
 	public Collection<Meetup>					meetups;
 	
-	@ForeignCollectionField(eager = true, foreignFieldName="receiver")
+	@ForeignCollectionField(foreignFieldName="receiver")
 	public Collection<Invitation>				invitations;
 }
 

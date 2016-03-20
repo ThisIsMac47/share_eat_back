@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.services;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +17,9 @@ public class AuthService {
 	private DataService			dataSrv = Core.getInstance().getDataService();
 	private Logger 				logger = LogManager.getLogger();
 	
-	private Map<String, User>	loggedUsers;
+	private Map<String, User>	loggedUsers = new HashMap<String, User>();
 	
 	public AuthService() {
-		loggedUsers = new HashMap<String, User>();
 		for(User user : dataSrv.getUsers()) {
 			if (user.accessToken != null && !user.getAccessToken().isEmpty()) {
 				loggedUsers.put(user.getAccessToken(), user);
@@ -54,5 +54,10 @@ public class AuthService {
 	public void		addLoggedUser(String token, User user) {
 		loggedUsers.put(token, user);
 		user.setAccessToken(token);
+		try {
+			dataSrv.usersDao.update(user);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -48,15 +48,15 @@ public class MeetupRoute {
 			return Response.status(Status.NOT_FOUND).build();
 		
 		// Try to parse the string to date
-		Date date;
 		try {
-			date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").parse(request.getDate());
+			Date date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm").parse(request.getDate());
 		} catch (ParseException e) {
+			e.printStackTrace();
 			return Response.status(Status.BAD_REQUEST).build();
 		}
 		
 		// Ask to create the service and from the result, return created or not.
-		boolean state = meetupSrv.createMeetup(request.getName(), user, loc, request.getTags(), request.getInvited(), date, request.getMealplan());
+		boolean state = meetupSrv.createMeetup(request.getName(), user, loc, request.getTags(), request.getInvited(), request.getDate(), request.getMealplan());
 		if (state)
 			return Response.ok(Status.CREATED).build();
 		else

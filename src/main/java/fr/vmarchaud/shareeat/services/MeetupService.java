@@ -1,10 +1,6 @@
 package fr.vmarchaud.shareeat.services;
 
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -16,7 +12,6 @@ import fr.vmarchaud.shareeat.objects.Invitation;
 import fr.vmarchaud.shareeat.objects.Location;
 import fr.vmarchaud.shareeat.objects.Meetup;
 import fr.vmarchaud.shareeat.objects.User;
-import fr.vmarchaud.shareeat.request.MeetupCreateRequest;
 
 public class MeetupService {
 	
@@ -37,7 +32,7 @@ public class MeetupService {
 	 * 
 	 * @return true if created and false if there was an error
 	 */
-	public boolean	createMeetup(String name, User user, Location loc, String[] tags, List<UUID> invitedIds, Date date, int price) {
+	public boolean	createMeetup(String name, User user, Location loc, String[] tags, List<UUID> invitedIds, String date, int price) {
 		Meetup meetup = new Meetup();
 		
 		// Set default information
@@ -51,32 +46,14 @@ public class MeetupService {
 		meetup.setName(name);
 		
 		// For each id, try to get user from and create invitation for each of them
-		List<Invitation> invitations = new ArrayList<Invitation>();
 		for(UUID userId : invitedIds) {
 			User tmp = userSrv.byId(userId);
 			if (tmp == null)
 				return false;
-			Invitation invit =  new Invitation(user, tmp, EnumInvitation.MEETUP, meetup, EnumState.NONE);
-			invitations.add(invit);
-			try {
-				dataSrv.invitationsDao.create(invit);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				return false;
-			}
-			invit.getReceiver().getInvitations().add(invit);
+			tmp.getInvitations().add(new Invitation(user, tmp, EnumInvitation.MEETUP, meetup, EnumState.NONE));
 		}
-		// If we had created all invitation successfuly, register them in the meetup
-		meetup.setUsers(invitations);
-		
 		// And finally create the meetup on the database and register it for the master
-		try {
-			dataSrv.meetupsDao.create(meetup);
-			user.getMeetups().add(meetup);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+		user.getMeetups().add(meetup);
 		// If meetup has been succesfuly created
 		return true;
 	}

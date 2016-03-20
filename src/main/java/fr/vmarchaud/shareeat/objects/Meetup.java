@@ -31,13 +31,13 @@ public class Meetup {
 	@DatabaseField(columnName = "tags")
 	public String					tags;
 	
-	@DatabaseField(columnName = "date",	dataType = DataType.DATE_TIME)
-	public Date						date;
+	@DatabaseField(columnName = "date")
+	public String					date;
 	
 	@DatabaseField(columnName = "location", foreign = true)
 	public Location					location;
 	
-	@DatabaseField(columnName = "location")
+	@DatabaseField(columnName = "price")
 	public int						price;
 
 	@ForeignCollectionField(eager = true, foreignFieldName="meetup")

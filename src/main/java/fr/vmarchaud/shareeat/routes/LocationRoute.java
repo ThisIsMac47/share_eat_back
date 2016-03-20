@@ -39,4 +39,5 @@ public class LocationRoute {
 			return Response.status(Status.NOT_FOUND).build();
 		return Response.ok(loc).build();
 	}
+	
 }

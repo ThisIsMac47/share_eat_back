@@ -147,10 +147,10 @@ public class UserService {
 		user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 		user.setMail(mail);
 		String accessToken = new BigInteger(130, random).toString(32);
-		authSrv.addLoggedUser(accessToken, user);
 		try {
 			dataSrv.usersDao.create(user);
 			dataSrv.getUsers().add(user);
+			authSrv.addLoggedUser(accessToken, user);
 		} catch (SQLException e) {
 			logger.error("exception while trying to register an new user", e);
 			return null;
