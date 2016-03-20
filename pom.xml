@@ -78,11 +78,11 @@
 			<artifactId>jbcrypt</artifactId>
 			<version>0.3m</version>
 		</dependency>
-		<!-- Mail -->
+		<!-- $$ -->
 		<dependency>
-		    <groupId>org.codemonkey.simplejavamail</groupId>
-		    <artifactId>simple-java-mail</artifactId>
-		    <version>3.0.1</version>
+		  <groupId>com.stripe</groupId>
+		  <artifactId>stripe-java</artifactId>
+		  <version>1.46.0</version>
 		</dependency>
 
 	</dependencies>

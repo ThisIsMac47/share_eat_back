@@ -1,6 +1,5 @@
 package fr.vmarchaud.shareeat.services;
 
-import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +18,11 @@ import fr.vmarchaud.shareeat.objects.Invitation;
 import fr.vmarchaud.shareeat.objects.Location;
 import fr.vmarchaud.shareeat.objects.Mealplan;
 import fr.vmarchaud.shareeat.objects.Meetup;
+import fr.vmarchaud.shareeat.objects.Payement;
 import fr.vmarchaud.shareeat.objects.Relation;
 import fr.vmarchaud.shareeat.objects.Tag;
 import fr.vmarchaud.shareeat.objects.User;
+import fr.vmarchaud.shareeat.utils.CustomConfig;
 import lombok.Getter;
 
 
@@ -40,11 +41,15 @@ public class DataService {
 	protected Dao<Mealplan, String> mealplansDao;
 	protected Dao<Meetup, String> 	meetupsDao;
 	protected Dao<Invitation, String> invitationsDao;
+	protected Dao<Payement, String> payementsDao;
 	protected Dao<Tag, String>	tagsDao;
 	
+	// All the internal data
 	@Getter protected List<User> 			users;
 	@Getter protected List<Location>		locations;
 	@Getter protected List<Meetup>			meetups;
+	@Getter protected List<Invitation>		invitations;
+	@Getter protected List<Payement>		payements;
 	@Getter protected List<String>			tags = new ArrayList<String>();
 
 	private boolean started = false;
@@ -65,9 +70,12 @@ public class DataService {
 	
 			// Starting the connection
 			try {
-				conn = new JdbcPooledConnectionSource(Core.getInstance().getConfig().HOSTNAME,
-						Core.getInstance().getConfig().USERNAME, Core.getInstance().getConfig().PASSWORD,
-						DatabaseTypeUtils.createDatabaseType(Core.getInstance().getConfig().HOSTNAME));
+				Core.getInstance().getConfig();
+				Core.getInstance().getConfig();
+				Core.getInstance().getConfig();
+				Core.getInstance().getConfig();
+				conn = new JdbcPooledConnectionSource(CustomConfig.HOSTNAME, CustomConfig.USERNAME, CustomConfig.PASSWORD,
+														DatabaseTypeUtils.createDatabaseType(CustomConfig.HOSTNAME));
 				logger.info("Connection with database etablished");
 			} catch (SQLException e) {
 				logger.error("cannot create jdbc connection", e);
@@ -83,6 +91,7 @@ public class DataService {
 				tagsDao = DaoManager.createDao(conn, Tag.class);
 				meetupsDao = DaoManager.createDao(conn, Meetup.class);
 				invitationsDao = DaoManager.createDao(conn, Invitation.class);
+				payementsDao = DaoManager.createDao(conn, Payement.class);
 			} catch (SQLException e) {
 				logger.error("cannot create DAO", e);
 				System.exit(0);
@@ -94,11 +103,13 @@ public class DataService {
 				locations = locationsDao.queryForAll();
 				relationsDao.queryForAll();
 				mealplansDao.queryForAll();
+				meetups = meetupsDao.queryForAll();
+				invitations = invitationsDao.queryForAll();
+				payements = payementsDao.queryForAll();
+				
 				tagsDao.queryForAll().forEach(tag -> {
 					tags.add(tag.getValue());
 				});
-				meetups = meetupsDao.queryForAll();
-				invitationsDao.queryForAll();
 			} catch (SQLException e) {
 				logger.error("cannot query all data from DAO", e);
 				System.exit(0);

@@ -11,6 +11,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import fr.vmarchaud.shareeat.enums.EnumState;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -25,8 +26,8 @@ public class Meetup {
 	@DatabaseField(columnName = "name")
 	public String					name;
 	
-	@DatabaseField(columnName = "done")
-	public boolean					done;
+	@DatabaseField(columnName = "state")
+	public EnumState				state;
 	
 	@DatabaseField(columnName = "tags")
 	public String					tags;

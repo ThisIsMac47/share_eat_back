@@ -1,14 +1,12 @@
 package fr.vmarchaud.shareeat.routes;
 
 import java.util.Map;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -19,13 +17,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import fr.vmarchaud.shareeat.Core;
-import fr.vmarchaud.shareeat.objects.Relation;
+import fr.vmarchaud.shareeat.enums.EnumState;
 import fr.vmarchaud.shareeat.objects.User;
-import fr.vmarchaud.shareeat.request.UserProfileUpdateRequest;
 import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.MeetupService;
 import fr.vmarchaud.shareeat.services.UserService;
-import fr.vmarchaud.shareeat.utils.Utils;
 
 @Path("/me")
 @RolesAllowed("USER")
@@ -63,11 +59,22 @@ public class MeRoute {
 		return Response.ok(Core.getInstance().getDataService().getTags()).build();
 	}
 	
-	@Path("invitations")
+	@Path("invitations/all")
 	@GET
 	public Response	getInvitations(@Context ContainerRequestContext context) {
-		return Response.ok(((User)context.getProperty("user")).getInvitations()).build();
+		return Response.ok(((User)context.getProperty("user")).getInvitations().stream().filter(invit -> invit.getState() != EnumState.NONE).collect(Collectors.toList())).build();
 	}
+	
+	@Path("invitations/{state}")
+	@GET
+	public Response	getNonRespondedInvits(@PathParam("state") String state, @Context ContainerRequestContext context) {
+		EnumState predicate = EnumState.valueOf(state);
+		if (predicate == null || predicate == EnumState.NONE)
+			return Response.status(Status.BAD_REQUEST).build();
+		return Response.ok(((User)context.getProperty("user")).getInvitations().stream().filter(invit -> invit.getState() == predicate).collect(Collectors.toList())).build();
+	}
+	
+	
 	
 	// TO-DO
 	/*

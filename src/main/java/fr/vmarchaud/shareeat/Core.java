@@ -13,6 +13,7 @@ import fr.vmarchaud.shareeat.services.AuthService;
 import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.DataService;
 import fr.vmarchaud.shareeat.services.MeetupService;
+import fr.vmarchaud.shareeat.services.StripeService;
 import fr.vmarchaud.shareeat.services.UserService;
 import fr.vmarchaud.shareeat.utils.Configuration;
 import fr.vmarchaud.shareeat.utils.CustomConfig;
@@ -47,6 +48,7 @@ public class Core {
 	@Getter	public AuthService	authService;
 	@Getter public MeetupService meetupService;
 	@Getter public LocationService locationService;
+	@Getter public StripeService 	stripeService;
 	
 	// Config 
 	@Getter public CustomConfig config;
@@ -65,9 +67,10 @@ public class Core {
 		authService = new AuthService();
 		meetupService = new MeetupService();
 		locationService = new LocationService();
+		stripeService = new StripeService();
 		
 		// Start web server
-		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(config.BASE_URL), new Configuration());
+		httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(CustomConfig.BASE_URL), new Configuration());
 		
 		logger.info("Server ready in " + (System.currentTimeMillis() - start) + " ms");
 		

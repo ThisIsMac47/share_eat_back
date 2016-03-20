@@ -1,5 +1,5 @@
 package fr.vmarchaud.shareeat.enums;
 
 public enum EnumState {
-	ACCEPTED, REFUSED, NONE;
+	ACCEPTED, REFUSED, NONE, WAITING;
 }

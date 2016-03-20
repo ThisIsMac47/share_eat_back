@@ -40,6 +40,12 @@ public class DebugRoute {
 	@Path("invitations/all")
 	@GET
 	public Response showAllInvit() {
-		return Response.ok(service.getLocations()).build(); 
+		return Response.ok(service.getInvitations()).build(); 
+	}
+	
+	@Path("payements/all")
+	@GET
+	public Response showPayements() {
+		return Response.ok(service.getPayements()).build(); 
 	}
 }
