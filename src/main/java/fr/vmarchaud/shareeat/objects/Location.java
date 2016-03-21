@@ -1,10 +1,8 @@
 package fr.vmarchaud.shareeat.objects;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import lombok.Data;
@@ -30,7 +28,10 @@ public class Location {
 
 	@DatabaseField(columnName = "description")
 	public	String	description;
-	
-	@ForeignCollectionField(eager = true)
-	public Collection<Mealplan> plans;
+
+	@DatabaseField(columnName = "price")
+	public 	int 	price;
+
+	@DatabaseField(columnName = "mail")
+	public 	int 	mail;
 }

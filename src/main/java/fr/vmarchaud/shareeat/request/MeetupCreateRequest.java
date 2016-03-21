@@ -10,11 +10,9 @@ import lombok.Data;
 public class MeetupCreateRequest {
 	public List<UUID> 	invited;
 	public UUID			location;
-	public int			mealplan;
 	public String[]		tags;
 	public String		date;
 	public String		name;
-	
 	
 	public boolean isValid() {
 		if (invited == null || invited.size() == 0 || location == null || tags == null || tags.length == 0 || date == null || name == null)

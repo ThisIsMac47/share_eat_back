@@ -16,7 +16,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.objects.Invitation;
 import fr.vmarchaud.shareeat.objects.Location;
-import fr.vmarchaud.shareeat.objects.Mealplan;
 import fr.vmarchaud.shareeat.objects.Meetup;
 import fr.vmarchaud.shareeat.objects.Payement;
 import fr.vmarchaud.shareeat.objects.Relation;
@@ -38,7 +37,6 @@ public class DataService {
 	protected Dao<User, String> 	usersDao;
 	protected Dao<Relation, String> relationsDao;
 	protected Dao<Location, String> locationsDao;
-	protected Dao<Mealplan, String> mealplansDao;
 	protected Dao<Meetup, String> 	meetupsDao;
 	protected Dao<Invitation, String> invitationsDao;
 	protected Dao<Payement, String> payementsDao;
@@ -87,7 +85,6 @@ public class DataService {
 				usersDao = DaoManager.createDao(conn, User.class);
 				relationsDao = DaoManager.createDao(conn, Relation.class);
 				locationsDao = DaoManager.createDao(conn, Location.class);
-				mealplansDao = DaoManager.createDao(conn, Mealplan.class);
 				tagsDao = DaoManager.createDao(conn, Tag.class);
 				meetupsDao = DaoManager.createDao(conn, Meetup.class);
 				invitationsDao = DaoManager.createDao(conn, Invitation.class);
@@ -102,7 +99,6 @@ public class DataService {
 				users = usersDao.queryForAll();
 				locations = locationsDao.queryForAll();
 				relationsDao.queryForAll();
-				mealplansDao.queryForAll();
 				meetups = meetupsDao.queryForAll();
 				invitations = invitationsDao.queryForAll();
 				payements = payementsDao.queryForAll();

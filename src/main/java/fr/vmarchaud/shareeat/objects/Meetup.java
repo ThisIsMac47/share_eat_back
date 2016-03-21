@@ -37,9 +37,6 @@ public class Meetup {
 	
 	@DatabaseField(columnName = "location", foreign = true)
 	public Location					location;
-	
-	@DatabaseField(columnName = "price")
-	public int						price;
 
 	@ForeignCollectionField(eager = true, foreignFieldName="meetup")
 	public Collection<Invitation>	users;

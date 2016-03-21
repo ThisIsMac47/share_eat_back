@@ -3,14 +3,11 @@ package fr.vmarchaud.shareeat.routes;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.stream.Collectors;
-
+import java.util.UUID;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
@@ -68,7 +65,7 @@ public class MeetupRoute {
 		}
 		
 		// Ask to create the service and from the result, return created or not.
-		Meetup meetup = meetupSrv.createMeetup(request.getName(), user, loc, request.getTags(), request.getInvited(), request.getDate(), request.getMealplan());
+		Meetup meetup = meetupSrv.createMeetup(request.getName(), user, loc, request.getTags(), request.getInvited(), request.getDate());
 		if (meetup != null)
 			return Response.ok(meetup.getId()).build();
 		else
@@ -78,27 +75,38 @@ public class MeetupRoute {
 	@Path("payement")
 	@POST
 	public Response	pay(JsonObject request, @Context ContainerRequestContext context) {
-		if (request.get("id") == null || request.get("token") == null || !Utils.isUUID(request.get("id").getAsString()))
+		if (!request.has("id") || !request.has("token") || !Utils.isUUID(request.get("id").getAsString()))
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		// Get all data we need
 		User user = (User)context.getProperty("user");
 		Meetup meetup = meetupSrv.byId(request.get("id").getAsString());
 		String token = request.get("token").getAsString();
-		boolean state = stripeSrv.chargeUser(meetup, user, token);
+		boolean plusone = false;
+		
+		// Verify that the user is trying to pay for a meetup that he will participe in.
+		if (!meetup.getUsers().stream().anyMatch(invit -> invit.getReceiver().getId().compareTo(user.getId()) == 0)) {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		// The plus one if present
+		if (request.has("plusone") && Utils.isUUID(request.get("plusone").getAsString())) {
+			UUID id = UUID.fromString(request.get("plusone").getAsString());
+			plusone = meetup.getUsers().stream().anyMatch(invit -> invit.getReceiver().getId().compareTo(id) == 0);
+		}
+		
+		boolean state = stripeSrv.chargeUser(meetup, user, token, plusone);
 		if (state) {
-			// If the master had payed, we throw all invitations
-			if (user.getId().compareTo(meetup.getMaster().getId()) == 0) {
-				meetup.setState(EnumState.WAITING);
-				meetup.getUsers().forEach(invit -> {
-					invit.setState(EnumState.WAITING);
-				});
-			}
-			// Else if its just an invited users
-			else {
-				Invitation invitation = meetup.getUsers().stream().filter(invit -> invit.getReceiver().getId().compareTo(user.getId()) == 0).findFirst().orElse(null);
+			// Valid the invitation if payement is valid
+			Invitation invitation = meetup.getUsers().stream().filter(invit -> invit.getReceiver().getId().compareTo(user.getId()) == 0).findFirst().orElse(null);
+			invitation.setState(EnumState.ACCEPTED);
+			// And valid the plusone invit if it exist
+			if (plusone) {
+				UUID id = UUID.fromString(request.get("plusone").getAsString());
+				invitation = meetup.getUsers().stream().filter(invit -> invit.getReceiver().getId().compareTo(id) == 0).findFirst().orElse(null);
 				invitation.setState(EnumState.ACCEPTED);
 			}
+			
 			return Response.status(Status.ACCEPTED).build();
 		}
 		else

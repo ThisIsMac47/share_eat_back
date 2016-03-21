@@ -80,7 +80,7 @@ public class MeetupService {
 	 * 
 	 * @return Meetup if created and null if there was an error
 	 */
-	public Meetup	createMeetup(String name, User user, Location loc, String[] tags, List<UUID> invitedIds, String date, int price) {
+	public Meetup	createMeetup(String name, User user, Location loc, String[] tags, List<UUID> invitedIds, String date) {
 		Meetup meetup = new Meetup();
 		
 		// Set default information
@@ -88,9 +88,8 @@ public class MeetupService {
 		meetup.setMaster(user);
 		meetup.setLocation(loc);
 		meetup.setTags(Arrays.stream(tags).collect(Collectors.joining(",")));
-		meetup.setPrice(price);
 		meetup.setDate(date);
-		meetup.setState(EnumState.NONE);
+		meetup.setState(EnumState.WAITING);
 		meetup.setName(name);
 		
 		// For each id, try to get user from and create invitation for each of them
@@ -98,7 +97,7 @@ public class MeetupService {
 			User tmp = userSrv.byId(userId);
 			if (tmp == null)
 				return null;
-			tmp.getInvitations().add(new Invitation(user, tmp, EnumInvitation.MEETUP, meetup, EnumState.NONE));
+			tmp.getInvitations().add(new Invitation(user, tmp, EnumInvitation.MEETUP, meetup, EnumState.WAITING));
 		}
 		// And finally create the meetup on the database and register it for the master
 		user.getMeetups().add(meetup);

@@ -57,7 +57,6 @@ public class LocationService {
 	 * @return a List of Location or empty list if nothing found
 	 */
 	public List<Location>		byPrice(int price) {
-		return dataSrv.getLocations().stream().filter(location -> location.plans != null && location.getPlans().stream().anyMatch(plans -> plans.getPrice() == price))
-				.collect(Collectors.toCollection(ArrayList::new));
+		return dataSrv.getLocations().stream().filter(location -> location.getPrice() == price).collect(Collectors.toCollection(ArrayList::new));
 	}
 }

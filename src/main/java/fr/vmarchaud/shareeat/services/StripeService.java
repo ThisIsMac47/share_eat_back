@@ -34,13 +34,15 @@ public class StripeService {
 	 * @param token : Stripe payement token used to create the charge
 	 * @return
 	 */
-	public boolean chargeUser(Meetup meetup, User user, String token) {
+	public boolean chargeUser(Meetup meetup, User user, String token, boolean plusone) {
 		
 		// Create the charge with price and token
 		Map<String, Object> chargeParams = new HashMap<String, Object>();
-		chargeParams.put("amount", meetup.getPrice() * 100);
+		chargeParams.put("amount", (plusone ? 2 : 1) * 100);
 		chargeParams.put("currency", "EUR");
 		chargeParams.put("source", token);
+		chargeParams.put("capture", true);
+		chargeParams.put("receipt_email", user.getMail());
 		chargeParams.put("description", "ShareEat diner (" + meetup.getId().toString() + ")");
 		
 		// Try to create the carge
