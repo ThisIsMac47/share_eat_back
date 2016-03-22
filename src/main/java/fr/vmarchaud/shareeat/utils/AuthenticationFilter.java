@@ -38,10 +38,7 @@ public class AuthenticationFilter implements ContainerRequestFilter
             // Get data from header
             final List<String> authorization = requestContext.getHeaders().get("Authorization");
             
-            System.out.println(Core.getInstance().gson.toJson(requestContext.getHeaders()));
-            
             if(authorization == null || authorization.isEmpty())  {
-            	System.out.println("yolo");
                 requestContext.abortWith(ACCESS_DENIED);
                 return;
             }
@@ -59,7 +56,6 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 // Get all token
                 StringTokenizer tokenizer = new StringTokenizer(decodedString, ":");
                 if (tokenizer.countTokens() != 2) {
-                	System.out.println("lol3");
                 	System.out.println(decodedString);
                 	requestContext.abortWith(ACCESS_DENIED);
                     return;
@@ -80,7 +76,6 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 if (user != null) {
                 	// Check if the user have enought right to go here
                 	if (EnumRole.compareWeight(roleNeeded, user.getRole()) > 0) {
-                    	System.out.println("lol1");
                 		requestContext.abortWith(ACCESS_DENIED);
                         return;
                 	}
@@ -90,7 +85,6 @@ public class AuthenticationFilter implements ContainerRequestFilter
                 }
                 // User not found, get out
                 else {
-                	System.out.println("yolo4");
                 	requestContext.abortWith(ACCESS_DENIED);
                     return;
                 }

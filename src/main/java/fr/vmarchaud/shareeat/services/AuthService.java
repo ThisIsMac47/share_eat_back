@@ -12,8 +12,6 @@ import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.utils.Utils;
 
 public class AuthService {
-		
-	private UserService			userSrv = Core.getInstance().getUserService();
 	private DataService			dataSrv = Core.getInstance().getDataService();
 	private Logger 				logger = LogManager.getLogger();
 	

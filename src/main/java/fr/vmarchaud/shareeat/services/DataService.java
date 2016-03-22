@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.db.DatabaseTypeUtils;
@@ -27,8 +26,6 @@ import lombok.Getter;
 
 public class DataService {
 
-	// DB constants
-	public static final Gson gson = Core.getInstance().gson;
 
 	// Internal
 	protected ConnectionSource 	conn = null;
@@ -68,12 +65,7 @@ public class DataService {
 	
 			// Starting the connection
 			try {
-				Core.getInstance().getConfig();
-				Core.getInstance().getConfig();
-				Core.getInstance().getConfig();
-				Core.getInstance().getConfig();
-				conn = new JdbcPooledConnectionSource(CustomConfig.HOSTNAME, CustomConfig.USERNAME, CustomConfig.PASSWORD,
-														DatabaseTypeUtils.createDatabaseType(CustomConfig.HOSTNAME));
+				conn = new JdbcPooledConnectionSource(CustomConfig.HOSTNAME, CustomConfig.USERNAME, CustomConfig.PASSWORD, DatabaseTypeUtils.createDatabaseType(CustomConfig.HOSTNAME));
 				logger.info("Connection with database etablished");
 			} catch (SQLException e) {
 				logger.error("cannot create jdbc connection", e);

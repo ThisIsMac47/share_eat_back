@@ -16,7 +16,6 @@ import fr.vmarchaud.shareeat.objects.User;
 public class MeetupService {
 	
 	private UserService		userSrv = Core.getInstance().getUserService();
-	private LocationService	locationSrv = Core.getInstance().getLocationService();
 	private DataService		dataSrv = Core.getInstance().getDataService();
 	
 	/**

@@ -147,6 +147,7 @@ public class UserService {
 		user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt()));
 		user.setMail(mail);
 		String accessToken = new BigInteger(130, random).toString(32);
+		user.setAccessToken(accessToken);
 		try {
 			dataSrv.usersDao.create(user);
 			dataSrv.getUsers().add(user);

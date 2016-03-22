@@ -9,6 +9,6 @@ public class UserRegisterRequest {
 	public String password;
 	
 	public boolean isValid() {
-		return !mail.isEmpty() && !password.isEmpty() ? true : false;
+		return mail != null && password != null && !mail.isEmpty() && !password.isEmpty() ? true : false;
 	}
 }

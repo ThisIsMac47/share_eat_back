@@ -38,9 +38,6 @@ public class Core {
 	@Getter static Core instance;
 	@Getter static Logger logger = LogManager.getLogger();
 	@Getter static HttpServer httpServer;
-
-	// Gson instance
-	public Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	// Service & db
 	@Getter public DataService dataService;
@@ -63,8 +60,8 @@ public class Core {
 		
 		// Starting service
 		dataService = new DataService();
-		userService = new UserService();
 		authService = new AuthService();
+		userService = new UserService();
 		meetupService = new MeetupService();
 		locationService = new LocationService();
 		stripeService = new StripeService();

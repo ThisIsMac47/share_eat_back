@@ -33,5 +33,5 @@ public class Location {
 	public 	int 	price;
 
 	@DatabaseField(columnName = "mail")
-	public 	int 	mail;
+	public 	String 	mail;
 }
