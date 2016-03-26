@@ -1,5 +1,6 @@
 package fr.vmarchaud.shareeat.services;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -96,11 +97,30 @@ public class MeetupService {
 			User tmp = userSrv.byId(userId);
 			if (tmp == null)
 				return null;
-			tmp.getInvitations().add(new Invitation(user, tmp, EnumInvitation.MEETUP, meetup, EnumState.WAITING));
+			tmp.getInvitations().add(new Invitation(UUID.randomUUID(), user, tmp, EnumInvitation.MEETUP, meetup, EnumState.WAITING));
 		}
 		// And finally create the meetup on the database and register it for the master
-		user.getMeetups().add(meetup);
+		dataSrv.getMeetups().add(meetup);
 		// If meetup has been succesfuly created
 		return meetup;
+	}
+	
+	/**
+	 * Update the state of an invitation
+	 * 
+	 * @param invit : the invitation
+	 * @param state : the new state
+	 * 
+	 * @return true if updated, else false
+	 */
+	public boolean	updateInvitation(Invitation invit, EnumState state) {
+		invit.setState(state);
+		try {
+			dataSrv.invitationsDao.update(invit);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }

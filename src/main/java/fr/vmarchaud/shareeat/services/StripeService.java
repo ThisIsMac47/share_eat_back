@@ -3,6 +3,7 @@ package fr.vmarchaud.shareeat.services;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.stripe.Stripe;
 import com.stripe.exception.APIConnectionException;
@@ -54,7 +55,14 @@ public class StripeService {
 			return false;
 		}
 		
-		dataSrv.getPayements().add(new Payement(user, CustomConfig.ENV == EnumEnv.PROD, token, charge.getId(), meetup));
+		Payement payement =	new Payement(UUID.randomUUID(), user, CustomConfig.ENV == EnumEnv.PROD, token, charge.getId(), meetup);
+		dataSrv.getPayements().add(payement);
+		try {
+			dataSrv.payementsDao.createOrUpdate(payement);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return true;
+		}
 		return true;
 	}
 }
