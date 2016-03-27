@@ -18,6 +18,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.JsonObject;
+import com.stripe.exception.APIConnectionException;
+import com.stripe.exception.APIException;
+import com.stripe.exception.AuthenticationException;
+import com.stripe.exception.CardException;
+import com.stripe.exception.InvalidRequestException;
 
 import fr.vmarchaud.shareeat.Core;
 import fr.vmarchaud.shareeat.enums.EnumState;
@@ -99,7 +104,14 @@ public class MeetupRoute {
 			plusone = meetup.getUsers().stream().anyMatch(invit -> invit.getReceiver().getId().compareTo(id) == 0);
 		}
 		
-		boolean state = stripeSrv.chargeUser(meetup, user, token, plusone);
+		boolean state = false;
+		try {
+			state = stripeSrv.chargeUser(meetup, user, token, plusone);
+		} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException
+				| APIException e) {
+
+			return Response.status(Status.NOT_ACCEPTABLE).entity(e.getMessage()).build();
+		}
 		if (state) {
 			// Valid the invitation if payement is valid
 			Invitation invitation = meetup.getUsers().stream().filter(invit -> invit.getReceiver().getId().compareTo(user.getId()) == 0).findFirst().orElse(null);

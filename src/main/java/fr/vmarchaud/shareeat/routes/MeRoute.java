@@ -1,8 +1,10 @@
 package fr.vmarchaud.shareeat.routes;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
@@ -21,8 +23,10 @@ import javax.ws.rs.core.Response.Status;
 import com.google.gson.JsonObject;
 
 import fr.vmarchaud.shareeat.Core;
+import fr.vmarchaud.shareeat.enums.EnumInvitation;
 import fr.vmarchaud.shareeat.enums.EnumState;
 import fr.vmarchaud.shareeat.objects.Invitation;
+import fr.vmarchaud.shareeat.objects.Meetup;
 import fr.vmarchaud.shareeat.objects.User;
 import fr.vmarchaud.shareeat.services.LocationService;
 import fr.vmarchaud.shareeat.services.MeetupService;
@@ -76,7 +80,9 @@ public class MeRoute {
 		JsonObject obj = new JsonObject();
 		User user = ((User)context.getProperty("user"));
 		obj.addProperty("received", user.getInvitations().stream().filter(invit -> invit.getState() == EnumState.WAITING).count());
-		obj.addProperty("futur", user.getInvitations().stream().filter(invit -> invit.getState() == EnumState.ACCEPTED && invit.getMeetup().getState() == EnumState.ACCEPTED).count());
+		
+		obj.addProperty("futur", user.getInvitations().stream().filter(invit -> invit.getState() == EnumState.ACCEPTED && invit.getMeetup().getState() == EnumState.WAITING).count() +
+				user.getMeetups().stream().filter(meetup -> meetup.getState() == EnumState.WAITING).count());
 		obj.addProperty("sent", user.getMeetups().stream().filter(meetup -> meetup.getState() == EnumState.WAITING).count());
 		return Response.ok(obj).build();
 	}
@@ -88,12 +94,25 @@ public class MeRoute {
 		EnumState predicate = EnumState.valueOf(state);
 		if (predicate == null || predicate == EnumState.NONE)
 			return Response.status(Status.BAD_REQUEST).build();
-		List<Invitation> invits = ((User)context.getProperty("user"))
-				.getInvitations().stream()
-				.filter(invit -> invit.getState() == EnumState.ACCEPTED)
-				.filter(invit -> invit.getMeetup().getState() == predicate)
-				.collect(Collectors.toList());
-		return Response.ok().build();
+		
+		User user = (User)context.getProperty("user");
+		List<UUID> meetups = new ArrayList<UUID>();
+		
+		user.getInvitations().stream().forEach(invit -> {
+			if (invit.getState() == EnumState.ACCEPTED && invit.getType() == EnumInvitation.MEETUP) {
+				Meetup meetup = meetupSrv.byId(invit.getMeetup().getId());
+				if (meetup.getState() == predicate) {
+					meetups.add(meetup.getId());
+				}
+			}
+			
+		});
+		user.getMeetups().stream().forEach(meetup -> {
+			if (meetup.getState() == predicate) {
+				meetups.add(meetup.getId());
+			}
+		});
+		return Response.ok(meetups).build();
 	}
 	
 	@Path("invitations/{state}")

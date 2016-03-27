@@ -13,7 +13,8 @@ public class CustomConfig {
 	public String	PASSWORD	=	"";
 	// DEV */
 	public static EnumEnv	ENV 		=	EnumEnv.DEV;
-	public static String 	BASE_URL	=	"http://localhost:4242";
+	//public static String 	BASE_URL	=	"http://localhost:4242";
+	public static String 	BASE_URL	=	"http://164.132.103.92:8080";
 	public static String	HOSTNAME	=	"jdbc:mysql://shareeat.vmarchaud.fr:3306/" + ENV.toString().toLowerCase();
 	public static String	USERNAME	=	"dev_user";
 	public static String	PASSWORD	=	"Nc6tqcEy2ZcYBrQP"; // "HMPTEWYSJG";

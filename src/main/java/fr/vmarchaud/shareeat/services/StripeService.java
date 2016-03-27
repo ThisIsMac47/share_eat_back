@@ -34,8 +34,14 @@ public class StripeService {
 	 * @param user : The user that will pay
 	 * @param token : Stripe payement token used to create the charge
 	 * @return
+	 * 
+	 * @throws APIException 
+	 * @throws CardException 
+	 * @throws APIConnectionException 
+	 * @throws InvalidRequestException 
+	 * @throws AuthenticationException 
 	 */
-	public boolean chargeUser(Meetup meetup, User user, String token, boolean plusone) {
+	public boolean chargeUser(Meetup meetup, User user, String token, boolean plusone) throws AuthenticationException, InvalidRequestException, APIConnectionException, CardException, APIException {
 		
 		// Create the charge with price and token
 		Map<String, Object> chargeParams = new HashMap<String, Object>();
@@ -48,12 +54,7 @@ public class StripeService {
 		
 		// Try to create the carge
 		Charge charge = null;
-		try {
-			charge = Charge.create(chargeParams);
-		} catch (AuthenticationException | InvalidRequestException | APIConnectionException | CardException | APIException e) {
-			e.printStackTrace();
-			return false;
-		}
+		charge = Charge.create(chargeParams);
 		
 		Payement payement =	new Payement(UUID.randomUUID(), user, CustomConfig.ENV == EnumEnv.PROD, token, charge.getId(), meetup);
 		dataSrv.getPayements().add(payement);

@@ -26,7 +26,7 @@ public class Invitation {
 	@DatabaseField(columnName = "type")
 	public EnumInvitation			type;
 	
-	@DatabaseField(columnName = "meetup", foreign = true)
+	@DatabaseField(foreignAutoRefresh = true, columnName = "meetup", foreign = true)
 	public transient Meetup			meetup;
 	
 	@DatabaseField(columnName = "state")

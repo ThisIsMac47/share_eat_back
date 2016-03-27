@@ -25,19 +25,19 @@ public class Meetup {
 
 	@DatabaseField(columnName = "name")
 	public String					name;
-	
-	@DatabaseField(columnName = "state")
-	public EnumState				state;
+
+	@DatabaseField(columnName = "date")
+	public String					date;
+
+	@DatabaseField(foreignAutoRefresh = true, columnName = "location", foreign = true)
+	public Location					location;
 	
 	@DatabaseField(columnName = "tags")
 	public String					tags;
-	
-	@DatabaseField(columnName = "date")
-	public String					date;
-	
-	@DatabaseField(columnName = "location", foreign = true)
-	public Location					location;
 
 	@ForeignCollectionField(eager = true, foreignFieldName="meetup")
 	public Collection<Invitation>	users;
+	
+	@DatabaseField(columnName = "state")
+	public EnumState				state;
 }
