@@ -8,8 +8,8 @@
 	 - Cryto : jBCrypt https://github.com/jeremyh/jBCrypt
 	 - Logging : log4j2 http://logging.apache.org/log4j/2.x/
 
-	DB structure : 
-	![alt text](https://github.com/ThisIsMac47/share_eat_back/raw/master/db_pattern.png "DB pattern")
+DB structure : 
+![alt text](https://github.com/ThisIsMac47/share_eat_back/raw/master/db_pattern.png "DB pattern")
 
 # How to run it
 1. Import Maven project
